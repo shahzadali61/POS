@@ -47,7 +47,6 @@ const saveBrand = () => {
     form.post(route('admin.brand.store'), {
         onSuccess: () => {
             form.reset();
-            message.success('Brand Added successfully!')
         },
     });
 };
