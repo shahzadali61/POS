@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
+import { message } from 'ant-design-vue';
+import { reactive, watch } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+
 // Define props correctly
 const props = defineProps({
     brand: Object,
@@ -10,8 +15,27 @@ const form = useForm({
     description: props.brand?.description || '',
 });
 
+onMounted(() => {
+    const page = usePage();
+    if (page.props.flash?.message) {
+        message.success(page.props.flash.message);
+    }
+    if (page.props.flash?.error) {
+        message.error(page.props.flash.error);
+    }
+});
+
+watch(() => props.brand, (newBrand) => {
+    form.name = newBrand.name;
+    form.description = newBrand.description || '';
+}, { deep: true });
+
 const editBrand = () => {
-    form.put(route('admin.brand.update', props.brand.id))
+    form.put(route('admin.brand.update', props.brand.id),{
+        onSuccess: () => {
+            message.success(usePage().props.flash.success);
+        },
+    })
 };
 </script>
 
@@ -41,7 +65,13 @@ const editBrand = () => {
                         <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                     </div>
                     <div>
-                        <a-button type="primary" html-type="submit">Update</a-button>
+                        <Link :href="route('admin.brands')">
+                            <a-button type="default" class="me-2">Back</a-button>
+                        </Link>
+                        <a-button type="primary" html-type="submit" :loading="form.processing">
+                            {{ form.processing ? 'Please wait...' : 'Update' }}
+                        </a-button>
+
                     </div>
                 </form>
             </div>

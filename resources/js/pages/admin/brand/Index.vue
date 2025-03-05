@@ -2,6 +2,7 @@
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import { message, Modal } from 'ant-design-vue';
 import type { TableColumnsType } from 'ant-design-vue';
 
 const columns = [
@@ -45,7 +46,24 @@ const form = useForm({
 
 const saveBrand = () => {
     form.post(route('admin.brand.store'), {
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+            message.success('Brand added successfully!');
+        },
+    });
+};
+const deleteBrand = (id: number) => {
+    Modal.confirm({
+        title: 'Are you sure you want to delete this brand?',
+        content: 'This action cannot be undone.',
+        okText: 'Yes, Delete',
+        okType: 'danger',
+        cancelText: 'Cancel',
+        onOk() {
+            form.delete(route('admin.brand.delete', id), {
+                onSuccess: () => message.success('Brand deleted successfully!'),
+            });
+        },
     });
 };
 </script>
@@ -75,7 +93,9 @@ const saveBrand = () => {
                         <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                     </div>
                     <div>
-                        <a-button type="primary" html-type="submit">Save</a-button>
+                        <a-button type="primary" html-type="submit" :loading="form.processing">
+                            {{ form.processing ? 'Please wait...' : 'Save' }}
+                        </a-button>
                     </div>
                 </form>
             </div>
@@ -97,7 +117,11 @@ const saveBrand = () => {
                     {{ record.description }}
                 </template>
                 <template v-else-if="column.dataIndex === 'action'">
-                    <Link :href="route('admin.brand.edit', record.id)" class="text-blue-500 hover:underline">Edit</Link>
+                    <Link :href="route('admin.brand.edit', record.id)" >
+                        <a-button >Edit</a-button>
+                    </Link>
+                    <a-button  danger @click="deleteBrand(record.id)">Delete</a-button>
+
                  </template>
                 </template>
             </a-table>

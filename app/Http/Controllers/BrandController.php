@@ -58,6 +58,15 @@ class BrandController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return redirect()->back()->with('success', 'Brand Update successfully');
+        return redirect()->back()->with('message', 'Brand Update successfully');
     }
+                public function destroy($id)
+            {
+                $brand = Brand::find($id);
+                if ($brand) {
+                    $brand->delete();
+                    return redirect()->back()->with('success', 'Brand deleted successfully.');
+                }
+                return redirect()->back()->with('error', 'Brand not found.');
+            }
 }
