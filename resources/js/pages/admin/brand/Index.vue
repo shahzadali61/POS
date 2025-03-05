@@ -108,7 +108,9 @@ const deleteBrand = (id: number) => {
                         <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                     </div>
                     <div>
-                        <a-button type="primary" html-type="submit">Save</a-button>
+                        <a-button type="primary" html-type="submit" :loading="form.processing">
+                        {{ form.processing ? 'Please wait...' : 'Save' }}
+                    </a-button>
                     </div>
                 </form>
             </div>

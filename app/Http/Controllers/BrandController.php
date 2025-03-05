@@ -13,7 +13,9 @@ class BrandController extends Controller
 
     public function index()
     {
-        $brands = Brand::orderBy('created_at', 'desc')->paginate(10);
+        $brands = Brand::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
         return Inertia::render('admin/brand/Index', compact('brands'));
     }
@@ -39,7 +41,7 @@ class BrandController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
         ]);
-        return redirect()->route('admin.brands')->with('message', 'Brand created successfully.');
+        return redirect()->route('admin.brands')->with('success', 'Brand created successfully.');
     }
 
     public function update(Request $request, $id)
@@ -60,14 +62,14 @@ class BrandController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return redirect()->back()->with('message', 'Brand Update successfully');
+        return redirect()->back()->with('success', 'Brand Update successfully');
     }
                 public function destroy($id)
             {
                 $brand = Brand::find($id);
                 if ($brand) {
                     $brand->delete();
-                    return redirect()->back()->with('message', 'Brand deleted successfully.');
+                    return redirect()->back()->with('success', 'Brand deleted successfully.');
                 }
                 return redirect()->back()->with('error', 'Brand not found.');
             }
