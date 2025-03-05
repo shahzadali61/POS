@@ -15,6 +15,9 @@ Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {
 
     Route::get('brands', [BrandController::class, 'index'])->name('brands');
     Route::post('brand/store', [BrandController::class, 'store'])->name('brand.store');
+    Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
+    Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
+
 });
 
 require __DIR__.'/settings.php';

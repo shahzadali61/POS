@@ -95,8 +95,9 @@ const toggleCollapse = () => {
 .content {
   margin: 24px 16px;
   padding: 24px;
-  background: #fff;
-  min-height: 280px;
+  background: #fafafa;
+  height: 100vh;
   border-radius: 8px;
+  overflow-y: auto;
 }
 </style>
