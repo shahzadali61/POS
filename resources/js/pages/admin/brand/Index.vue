@@ -3,7 +3,8 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
-import type { TableColumnsType } from 'ant-design-vue';
+import { usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 const columns = [
   {
@@ -44,11 +45,22 @@ const form = useForm({
     description: '',
 });
 
+onMounted(() => {
+    const page = usePage();
+    if (page.props.flash?.message) {
+        message.success(page.props.flash.message);
+    }
+    if (page.props.flash?.error) {
+        message.error(page.props.flash.error);
+    }
+});
+
+
 const saveBrand = () => {
     form.post(route('admin.brand.store'), {
         onSuccess: () => {
             form.reset();
-             message.success(usePage().props.flash.success);
+            message.success(usePage().props.flash.success);
         },
     });
 };
@@ -61,11 +73,14 @@ const deleteBrand = (id: number) => {
         cancelText: 'Cancel',
         onOk() {
             form.delete(route('admin.brand.delete', id), {
-                onSuccess: () => message.success('Brand deleted successfully!'),
+                onSuccess: () =>{
+            message.success(usePage().props.flash.success);
+        },
             });
         },
     });
 };
+
 </script>
 
 <template>
@@ -116,6 +131,7 @@ const deleteBrand = (id: number) => {
                 </template>
                 <template v-else-if="column.dataIndex === 'action'">
                     <Link :href="route('admin.brand.edit', record.id)" class="text-blue-500 hover:underline">Edit</Link>
+                    <a-button  danger @click="deleteBrand(record.id)">Delete</a-button>
                  </template>
                 </template>
             </a-table>

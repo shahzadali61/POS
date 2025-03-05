@@ -67,7 +67,7 @@ class BrandController extends Controller
                 $brand = Brand::find($id);
                 if ($brand) {
                     $brand->delete();
-                    return redirect()->back()->with('success', 'Brand deleted successfully.');
+                    return redirect()->back()->with('message', 'Brand deleted successfully.');
                 }
                 return redirect()->back()->with('error', 'Brand not found.');
             }

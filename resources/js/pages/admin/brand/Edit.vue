@@ -37,8 +37,6 @@ const editBrand = () => {
         },
     })
 };
-
-
 </script>
 
 <template>
