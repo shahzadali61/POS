@@ -17,6 +17,8 @@ Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
     Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
     Route::delete('brand/delete/{id}', [BrandController::class, 'destroy'])->name('brand.delete');
+
+
 });
 
 require __DIR__.'/settings.php';

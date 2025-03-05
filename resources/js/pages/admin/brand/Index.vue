@@ -3,6 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
+import type { TableColumnsType } from 'ant-design-vue';
 
 const columns = [
   {
@@ -47,6 +48,7 @@ const saveBrand = () => {
     form.post(route('admin.brand.store'), {
         onSuccess: () => {
             form.reset();
+            message.success('Brand added successfully!');
         },
     });
 };
@@ -59,9 +61,7 @@ const deleteBrand = (id: number) => {
         cancelText: 'Cancel',
         onOk() {
             form.delete(route('admin.brand.delete', id), {
-                onSuccess: () => {
-                    message.success('Brand deleted successfully!')
-             },
+                onSuccess: () => message.success('Brand deleted successfully!'),
             });
         },
     });
@@ -93,9 +93,7 @@ const deleteBrand = (id: number) => {
                         <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                     </div>
                     <div>
-                        <a-button type="primary" html-type="submit" :loading="form.processing">
-                            {{ form.processing ? 'Please wait...' : 'Save' }}
-                        </a-button>
+                        <a-button type="primary" html-type="submit">Save</a-button>
                     </div>
                 </form>
             </div>
@@ -117,11 +115,7 @@ const deleteBrand = (id: number) => {
                     {{ record.description }}
                 </template>
                 <template v-else-if="column.dataIndex === 'action'">
-                    <Link :href="route('admin.brand.edit', record.id)" >
-                        <a-button >Edit</a-button>
-                    </Link>
-                    <a-button  danger @click="deleteBrand(record.id)">Delete</a-button>
-
+                    <Link :href="route('admin.brand.edit', record.id)" class="text-blue-500 hover:underline">Edit</Link>
                  </template>
                 </template>
             </a-table>

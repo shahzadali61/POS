@@ -2,6 +2,9 @@
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { message } from 'ant-design-vue';
+import { reactive, watch } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 // Define props correctly
 const props = defineProps({
@@ -12,10 +15,25 @@ const form = useForm({
     description: props.brand?.description || '',
 });
 
+onMounted(() => {
+    const page = usePage();
+    if (page.props.flash?.message) {
+        message.success(page.props.flash.message);
+    }
+    if (page.props.flash?.error) {
+        message.error(page.props.flash.error);
+    }
+});
+
+watch(() => props.brand, (newBrand) => {
+    form.name = newBrand.name;
+    form.description = newBrand.description || '';
+}, { deep: true });
+
 const editBrand = () => {
     form.put(route('admin.brand.update', props.brand.id),{
         onSuccess: () => {
-            message.success('Brand update successfully!')
+            message.success(usePage().props.flash.success);
         },
     })
 };
