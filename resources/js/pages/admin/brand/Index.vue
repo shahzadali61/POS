@@ -3,7 +3,6 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
-import type { TableColumnsType } from 'ant-design-vue';
 
 const columns = [
   {
@@ -48,7 +47,7 @@ const saveBrand = () => {
     form.post(route('admin.brand.store'), {
         onSuccess: () => {
             form.reset();
-            message.success('Brand added successfully!');
+            message.success('Brand Added successfully!')
         },
     });
 };
@@ -61,7 +60,9 @@ const deleteBrand = (id: number) => {
         cancelText: 'Cancel',
         onOk() {
             form.delete(route('admin.brand.delete', id), {
-                onSuccess: () => message.success('Brand deleted successfully!'),
+                onSuccess: () => {
+                    message.success('Brand deleted successfully!')
+             },
             });
         },
     });

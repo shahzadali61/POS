@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
@@ -10,16 +11,17 @@ use Illuminate\Support\Facades\Auth;
 class BrandController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         $brands = Brand::orderBy('created_at', 'desc')->paginate(10);
 
-        return Inertia::render('admin/brand/Index',compact('brands'));
+        return Inertia::render('admin/brand/Index', compact('brands'));
     }
-    public function edit($id){
-        $brand=Brand::find($id);
-        if($brand){
-            return Inertia::render('admin/brand/Edit',compact('brand'));
-
+    public function edit($id)
+    {
+        $brand = Brand::find($id);
+        if ($brand) {
+            return Inertia::render('admin/brand/Edit', compact('brand'));
         }
         return redirect()->back()->with('error', 'Brand not found.');
     }
@@ -37,7 +39,7 @@ class BrandController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
         ]);
-        return redirect()->route('admin.brands')->with('success', 'Brand created successfully.');
+        return redirect()->route('admin.brands')->with('message', 'Brand created successfully.');
     }
 
     public function update(Request $request, $id)
@@ -60,13 +62,13 @@ class BrandController extends Controller
 
         return redirect()->back()->with('message', 'Brand Update successfully');
     }
-                public function destroy($id)
-            {
-                $brand = Brand::find($id);
-                if ($brand) {
-                    $brand->delete();
-                    return redirect()->back()->with('success', 'Brand deleted successfully.');
-                }
-                return redirect()->back()->with('error', 'Brand not found.');
-            }
+    public function destroy($id)
+    {
+        $brand = Brand::find($id);
+        if ($brand) {
+            $brand->delete();
+            return redirect()->back()->with('success', 'Brand deleted successfully.');
+        }
+        return redirect()->back()->with('error', 'Brand not found.');
+    }
 }

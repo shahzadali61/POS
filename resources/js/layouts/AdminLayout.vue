@@ -23,6 +23,7 @@ const collapsed = ref<boolean>(false);
 const toggleCollapse = () => {
   collapsed.value = !collapsed.value;
 };
+
 </script>
 
 <template>
