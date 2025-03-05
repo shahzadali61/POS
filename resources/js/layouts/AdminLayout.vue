@@ -23,18 +23,6 @@ const collapsed = ref<boolean>(false);
 const toggleCollapse = () => {
   collapsed.value = !collapsed.value;
 };
-
-import { watch } from 'vue';
-import { usePage } from '@inertiajs/vue3';
-import flasher from "@flasher/flasher";
-
-const page = usePage();
-
-watch(() => page.props.flashMessages, (newMessages) => {
-    if (newMessages) {
-        flasher.render(newMessages);
-    }
-}, { deep: true });
 </script>
 
 <template>
@@ -72,7 +60,6 @@ watch(() => page.props.flashMessages, (newMessages) => {
 
       <!-- Content Area -->
       <a-layout-content class="content">
-
         <slot /> <!-- Render Page Content Here -->
       </a-layout-content>
     </a-layout>

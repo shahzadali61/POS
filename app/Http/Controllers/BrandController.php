@@ -39,7 +39,7 @@ class BrandController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
         ]);
-        return redirect()->route('admin.brands')->with('success', 'Brand created successfully.');
+        return redirect()->route('admin.brands')->with('message', 'Brand created successfully.');
     }
 
     public function update(Request $request, $id)
