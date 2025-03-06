@@ -1,62 +1,25 @@
 <script setup lang="ts">
-import type { BreadcrumbItemType } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import Sidebar from '@/Components/admin/Sidebar.vue';
+import { Head } from '@inertiajs/vue3'
 import { ref } from 'vue';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 
-import {
-  UserOutlined,
-  UploadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from '@ant-design/icons-vue';
-
-interface Props {
-  breadcrumbs?: BreadcrumbItemType[];
-}
-
-withDefaults(defineProps<Props>(), {
-  breadcrumbs: () => [],
-});
-
-const selectedKeys = ref<string[]>(['1']);
+// Sidebar state
 const collapsed = ref<boolean>(false);
-
-const toggleCollapse = () => {
-  collapsed.value = !collapsed.value;
-};
 </script>
 
 <template>
+    <Head title="Dahboard" />
   <a-layout>
-    <!-- Sidebar -->
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1">
-            <Link :href="route('admin.dashboard')">
-            <user-outlined />
-            <span>Dashboard</span>
-          </Link>
-        </a-menu-item>
-        <a-menu-item key="2">
-            <Link :href="route('admin.brands')">
-            <user-outlined />
-            <span>Brands</span>
-          </Link>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <upload-outlined />
-          <span>Settings</span>
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
+    <!-- Sidebar Component (Now Using v-model) -->
+    <Sidebar v-model:collapsed="collapsed" />
 
     <!-- Main Layout -->
     <a-layout :style="{ height: '100vh' }">
       <!-- Header -->
       <a-layout-header class="header">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
-        <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
+        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="collapsed = false" />
+        <menu-fold-outlined v-else class="trigger" @click="collapsed = true" />
       </a-layout-header>
 
       <!-- Content Area -->
@@ -85,12 +48,6 @@ const toggleCollapse = () => {
 
 .trigger:hover {
   color: #1890ff;
-}
-
-.logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
 }
 
 .content {

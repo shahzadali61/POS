@@ -31,7 +31,7 @@ watch(() => props.brand, (newBrand) => {
 }, { deep: true });
 
 const editBrand = () => {
-    form.put(route('admin.brand.update', props.brand.id),{
+    form.put(route('user.brand.update', props.brand.id),{
         onSuccess: () => {
             message.success(usePage().props.flash.success);
         },
@@ -65,7 +65,7 @@ const editBrand = () => {
                         <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                     </div>
                     <div>
-                        <Link :href="route('admin.brands')">
+                        <Link :href="route('user.brands')">
                             <a-button type="default" class="me-2">Back</a-button>
                         </Link>
                         <a-button type="primary" html-type="submit" :loading="form.processing">

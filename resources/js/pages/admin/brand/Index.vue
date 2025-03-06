@@ -57,7 +57,7 @@ onMounted(() => {
 
 
 const saveBrand = () => {
-    form.post(route('admin.brand.store'), {
+    form.post(route('user.brand.store'), {
         onSuccess: () => {
             form.reset();
             message.success(usePage().props.flash.success);
@@ -72,7 +72,7 @@ const deleteBrand = (id: number) => {
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
-            form.delete(route('admin.brand.delete', id), {
+            form.delete(route('user.brand.delete', id), {
                 onSuccess: () =>{
             message.success(usePage().props.flash.success);
         },
@@ -132,7 +132,7 @@ const deleteBrand = (id: number) => {
                     {{ record.description }}
                 </template>
                 <template v-else-if="column.dataIndex === 'action'">
-                    <Link :href="route('admin.brand.edit', record.id)" class="text-blue-500 hover:underline">Edit</Link>
+                    <Link :href="route('user.brand.edit', record.id)" class="text-blue-500 hover:underline">Edit</Link>
                     <a-button  danger @click="deleteBrand(record.id)">Delete</a-button>
                  </template>
                 </template>
