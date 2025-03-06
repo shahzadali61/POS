@@ -54,7 +54,7 @@ class CategoryController extends Controller
 
         $Category = Category::find($id);
         if (!$Category) {
-            return redirect()->back()->with('error', 'Brand not found.');
+            return redirect()->back()->with('error', 'Category not found.');
         }
 
         $Category->update([
@@ -63,6 +63,6 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return redirect()->back()->with('success', 'Brand Update successfully');
+        return redirect()->back()->with('success', 'Category Update successfully');
     }
 }
