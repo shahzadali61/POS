@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,6 +52,10 @@ class User extends Authenticatable
      /**
      * Get the brands associated with the user.
      */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
     public function brands(): HasMany
     {
         return $this->hasMany(Brand::class);

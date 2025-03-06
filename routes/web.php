@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -14,6 +15,10 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
         return Inertia::render('admin/Dashboard');
     })->name('dashboard');
 
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+    Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('brand/category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
     Route::get('brands', [BrandController::class, 'index'])->name('brands');
     Route::post('brand/store', [BrandController::class, 'store'])->name('brand.store');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
