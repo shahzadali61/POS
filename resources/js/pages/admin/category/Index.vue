@@ -159,7 +159,7 @@ const updateCategory = () => {
 
         <!-- Edit Category Modal -->
        <!-- Edit Category Modal -->
-<a-modal v-model:visible="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false">
+<a-modal v-model:visible="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false" :footer="null" >
     <form @submit.prevent="updateCategory()">
         <div class="mb-4">
             <label class="block">Name</label>
