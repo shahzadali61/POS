@@ -7,33 +7,11 @@ import { usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
 const columns = [
-  {
-    title: 'Sr.',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'Created At',
-    dataIndex: 'created_at',
-    key: 'created_at',
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
-  },
-
-
+  { title: 'Sr.', dataIndex: 'id', key: 'id' },
+  { title: 'Name', dataIndex: 'name', key: 'name' },
+  { title: 'Description', dataIndex: 'description', key: 'description' },
+  { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
+  { title: 'Action', dataIndex: 'action', key: 'action' },
 ];
 // Define props correctly
 defineProps({

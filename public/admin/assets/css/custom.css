@@ -1,4 +1,15 @@
-.jj
-{
-    color: red;
-}
+.header {
+    background: #fff !important;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .content {
+    margin: 24px 16px;
+    padding: 24px;
+    background: #fafafa;
+    height: 100vh;
+    border-radius: 8px;
+    overflow-y: auto;
+  }

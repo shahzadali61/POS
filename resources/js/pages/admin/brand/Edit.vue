@@ -2,42 +2,42 @@
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { message } from 'ant-design-vue';
-import { reactive, watch } from 'vue';
+import { watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
 
-// Define props correctly
-const props = defineProps({
-    brand: Object,
-});
+// Define props with proper TypeScript types
+interface Brand {
+    id: number;
+    name: string;
+    description?: string;
+}
+
+const props = defineProps<{ brand: Brand }>();
+
 const form = useForm({
-    name: props.brand.name,
+    name: props.brand?.name || '',
     description: props.brand?.description || '',
 });
 
-onMounted(() => {
-    const page = usePage();
-    if (page.props.flash?.message) {
-        message.success(page.props.flash.message);
-    }
-    if (page.props.flash?.error) {
-        message.error(page.props.flash.error);
-    }
-});
-
+// Watch for changes in the props and update the form
 watch(() => props.brand, (newBrand) => {
-    form.name = newBrand.name;
-    form.description = newBrand.description || '';
+    if (newBrand) {
+        form.name = newBrand.name;
+        form.description = newBrand.description || '';
+    }
 }, { deep: true });
 
+const page = usePage(); // Store usePage() in a variable
+
 const editBrand = () => {
-    form.put(route('user.brand.update', props.brand.id),{
+    form.put(route('user.brand.update', props.brand.id), {
         onSuccess: () => {
-            message.success(usePage().props.flash.success);
+         message.success(page.props.flash.success);
         },
-    })
+    });
 };
 </script>
+
 
 <template>
     <Head title="Brand-Edit" />
