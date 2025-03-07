@@ -19,6 +19,7 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');
     Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
     Route::delete('brand/category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+    Route::get('category/log', [CategoryController::class, 'category_log'])->name('category.log');
     Route::get('brands', [BrandController::class, 'index'])->name('brands');
     Route::post('brand/store', [BrandController::class, 'store'])->name('brand.store');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');

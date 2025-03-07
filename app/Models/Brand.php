@@ -9,19 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 class Brand extends Model
 {
     protected $fillable = [
-        'user_id',
         'name',
         'slug',
         'description',
+        'user_id',
+        'category_id',
     ];
 
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-    public function categories()
-    {
-        return $this->belongsTo(Category::class);
     }
 }

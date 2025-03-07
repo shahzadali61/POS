@@ -4,7 +4,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
 import { ref, onMounted } from 'vue';
-
+import { Link } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 
 
@@ -24,18 +24,18 @@ onMounted(() => {
 });
 
 const columns = [
-  { title: 'Sr.', dataIndex: 'id', key: 'id' },
-  { title: 'Name', dataIndex: 'name', key: 'name' },
-  { title: 'Description', dataIndex: 'description', key: 'description' },
-  { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
-  { title: 'Action', dataIndex: 'action', key: 'action' },
+    { title: 'Sr.', dataIndex: 'id', key: 'id' },
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Description', dataIndex: 'description', key: 'description' },
+    { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
+    { title: 'Action', dataIndex: 'action', key: 'action' },
 ];
 
 defineProps({
-    categories:Object,
+    categories: Object,
 })
 
-const form =useForm({
+const form = useForm({
     name: '',
     description: '',
 })
@@ -44,15 +44,15 @@ const editForm = useForm({
     name: '',
     description: '',
 });
-const saveCategory=()=>{
-    form.post(route('user.category.store'),{
-        onSuccess:()=>{
+const saveCategory = () => {
+    form.post(route('user.category.store'), {
+        onSuccess: () => {
             form.reset();
             message.success(usePage().props.flash.success);
         }
     })
 }
-const deleteCategory =(id:number)=>{
+const deleteCategory = (id: number) => {
     Modal.confirm({
         title: 'Are you sure you want to delete this Category?',
         content: 'This action cannot be undone.',
@@ -61,9 +61,9 @@ const deleteCategory =(id:number)=>{
         cancelText: 'Cancel',
         onOk() {
             form.delete(route('user.category.delete', id), {
-                onSuccess: () =>{
-            message.success(usePage().props.flash.success);
-        },
+                onSuccess: () => {
+                    message.success(usePage().props.flash.success);
+                },
             });
         },
     });
@@ -86,7 +86,6 @@ const updateCategory = () => {
         }
     });
 };
-
 </script>
 
 <template>
@@ -107,20 +106,16 @@ const updateCategory = () => {
                             <div v-if="form.errors.name" class="text-red-500">{{ form.errors.name }}</div>
                         </div>
                         <div class="mb-4">
-                        <label class="block">Description</label>
-                        <a-textarea
-                            v-model:value="form.description"
-                            class="mt-2 w-full"
-                            placeholder="Description"
-                            :auto-size="{ minRows: 2, maxRows: 5 }"
-                        />
-                        <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
-                    </div>
-                    <div>
-                        <a-button type="primary" html-type="submit" >
-                        Save
-                    </a-button>
-                    </div>
+                            <label class="block">Description</label>
+                            <a-textarea v-model:value="form.description" class="mt-2 w-full" placeholder="Description"
+                                :auto-size="{ minRows: 2, maxRows: 5 }" />
+                            <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
+                        </div>
+                        <div>
+                            <a-button type="primary" html-type="submit">
+                                Save
+                            </a-button>
+                        </div>
                     </form>
                 </div>
             </a-col>
@@ -128,64 +123,56 @@ const updateCategory = () => {
 
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
-                    <h2 class="text-lg font-semibold mb-4">Category List</h2>
+                    <div>
+                        <h2 class="text-lg font-semibold mb-4">Category List</h2>
+                        <Link :href="route('user.category.log')" class="text-black">Logs</Link>
+                    </div>
                     <a-table :columns="columns" :data-source="categories.data" rowKey="id">
-                <template #bodyCell="{ column, record  }">
-                <template v-if="column.dataIndex === 'id'">
-                    <a>{{ record.id }}</a>
-                </template>
-                <template v-if="column.dataIndex === 'name'">
-                    <a>{{ record.name }}</a>
-                </template>
-                <template v-else-if="column.dataIndex === 'created_at'">
-                    {{ formatDate(record.created_at) }}
-                </template>
-                <template v-else-if="column.dataIndex === 'description'">
-                    {{ record.description ?? 'N/A' }}
-                </template>
-                <template v-else-if="column.dataIndex === 'action'">
-                    <a-button type="link" @click="openEditModal(record)">Edit</a-button>
-                    <a-button  danger @click="deleteCategory(record.id)">Delete</a-button>
-                 </template>
-                </template>
-            </a-table>
+                        <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'id'">
+                                <a>{{ record.id }}</a>
+                            </template>
+                            <template v-if="column.dataIndex === 'name'">
+                                <a>{{ record.name }}</a>
+                            </template>
+                            <template v-else-if="column.dataIndex === 'created_at'">
+                                {{ formatDate(record.created_at) }}
+                            </template>
+                            <template v-else-if="column.dataIndex === 'description'">
+                                {{ record.description ?? 'N/A' }}
+                            </template>
+                            <template v-else-if="column.dataIndex === 'action'">
+                                <a-button type="link" @click="openEditModal(record)">Edit</a-button>
+                                <a-button danger @click="deleteCategory(record.id)">Delete</a-button>
+                            </template>
+                        </template>
+                    </a-table>
 
                 </div>
             </a-col>
 
 
         </a-row>
-
-
         <!-- Edit Category Modal -->
-       <!-- Edit Category Modal -->
-<a-modal v-model:visible="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false" :footer="null" >
-    <form @submit.prevent="updateCategory()">
-        <div class="mb-4">
-            <label class="block">Name</label>
-            <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
-            <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
-        </div>
-        <div class="mb-4">
-            <label class="block">Description</label>
-            <a-textarea
-                v-model:value="editForm.description"
-                class="mt-2 w-full"
-                placeholder="Description"
-                :auto-size="{ minRows: 2, maxRows: 5 }"
-            />
-            <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
-        </div>
-        <div class="text-right">
-            <a-button type="default" @click="isEditModalVisible = false">Cancel</a-button>
-            <a-button type="primary" html-type="submit" class="ml-2">Update</a-button>
-        </div>
-    </form>
-</a-modal>
-
-
-
-
-
+        <a-modal v-model:visible="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false"
+            :footer="null">
+            <form @submit.prevent="updateCategory()">
+                <div class="mb-4">
+                    <label class="block">Name</label>
+                    <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
+                    <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Description</label>
+                    <a-textarea v-model:value="editForm.description" class="mt-2 w-full" placeholder="Description"
+                        :auto-size="{ minRows: 2, maxRows: 5 }" />
+                    <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
+                </div>
+                <div class="text-right">
+                    <a-button type="default" @click="isEditModalVisible = false">Cancel</a-button>
+                    <a-button type="primary" html-type="submit" class="ml-2">Update</a-button>
+                </div>
+            </form>
+        </a-modal>
     </AdminLayout>
 </template>
