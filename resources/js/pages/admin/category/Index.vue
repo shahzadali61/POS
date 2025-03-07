@@ -6,6 +6,7 @@ import { message, Modal } from 'ant-design-vue';
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import dayjs from "dayjs";
+const isLoading = ref(false);
 
 
 const formatDate = (date: string) => {
@@ -45,10 +46,14 @@ const editForm = useForm({
     description: '',
 });
 const saveCategory = () => {
+    isLoading.value = true;
     form.post(route('user.category.store'), {
         onSuccess: () => {
             form.reset();
             message.success(usePage().props.flash.success);
+        },
+        onFinish: () => {
+            isLoading.value = false; // ✅ Stop loading
         }
     })
 }
@@ -60,10 +65,14 @@ const deleteCategory = (id: number) => {
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
+            isLoading.value = true;
             form.delete(route('user.category.delete', id), {
                 onSuccess: () => {
                     message.success(usePage().props.flash.success);
                 },
+                onFinish: () => {
+            isLoading.value = false; // ✅ Stop loading
+        }
             });
         },
     });
@@ -79,23 +88,29 @@ const openEditModal = (category: any) => {
 
 // Update category
 const updateCategory = () => {
+    isLoading.value = true;
     editForm.put(route('user.category.update', editForm.id), {
         onSuccess: () => {
             isEditModalVisible.value = false;
             message.success(usePage().props.flash.success);
+        },
+        onFinish: () => {
+            isLoading.value = false; // ✅ Stop loading
         }
     });
 };
 </script>
 
 <template>
+      <div v-if="isLoading" class="loading-overlay" >
+        <a-spin size="large" />
+    </div>
 
     <Head title="Category" />
     <AdminLayout>
 
         <a-row class="justify-between">
-            <a-col :span="11">
-
+            <a-col :span="10">
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
                     <h2 class="text-lg font-semibold mb-4">Create Category</h2>
@@ -112,14 +127,14 @@ const updateCategory = () => {
                             <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
                         </div>
                         <div>
-                            <a-button type="primary" html-type="submit">
+                            <a-button type="primary" html-type="submit" :disabled="isLoading">
                                 Save
                             </a-button>
                         </div>
                     </form>
                 </div>
             </a-col>
-            <a-col :span="11">
+            <a-col :span="12">
 
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
@@ -179,3 +194,17 @@ const updateCategory = () => {
         </a-modal>
     </AdminLayout>
 </template>
+<style scoped>
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(218, 217, 217, 0.205);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+}
+</style>
