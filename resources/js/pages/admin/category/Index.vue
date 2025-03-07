@@ -123,9 +123,12 @@ const updateCategory = () => {
 
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
-                    <div>
+                    <div  class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">Category List</h2>
-                        <Link :href="route('user.category.log')" class="text-black">Logs</Link>
+                        <Link :href="route('user.category.log')" >
+                            <a-button type="default">Category Logs</a-button>
+                        </Link>
+
                     </div>
                     <a-table :columns="columns" :data-source="categories.data" rowKey="id">
                         <template #bodyCell="{ column, record }">

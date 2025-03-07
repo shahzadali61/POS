@@ -2,6 +2,7 @@
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
+import { Link } from '@inertiajs/vue3';
 
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
@@ -26,9 +27,11 @@ defineProps({
         <a-row>
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md">
-                    <div class="mb-4">
+                    <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Category Logs</h2>
-                        <a href=""></a>
+                        <Link :href="route('user.categories')" >
+                            <a-button type="default">Back</a-button>
+                        </Link>
                     </div>
 
                     <a-table v-if="CategoryLog" :columns="columns" :data-source="CategoryLog.data" rowKey="id">

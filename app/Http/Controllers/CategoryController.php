@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+
 
 class CategoryController extends Controller
 {
@@ -22,16 +24,17 @@ class CategoryController extends Controller
 
         return Inertia::render('admin/category/Index', compact('categories'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('categories', 'name')->whereNull('deleted_at'),
+            ],
             'description' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
-
         try {
             $category = Category::create([
                 'user_id' => Auth::id(),
@@ -44,34 +47,34 @@ class CategoryController extends Controller
                 $user = Auth::user();
                 $note = 'Category "' . $category->name . '" created by ' . ($user->name ?? 'Unknown User');
 
-                // ✅ Store category_name in logs
                 CategoryLog::create([
                     'note' => $note,
                     'category_id' => $category->id,
-                    'category_name' => $category->name, // ✅ Add category_name
+                    'category_name' => $category->name,
                     'user_id' => Auth::id(),
                 ]);
             }
 
             DB::commit();
-
             return redirect()->back()->with('success', 'Category created successfully.');
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
 
+            // 🛠 Debugging: Log error
             Log::error('Category creation failed: ' . $e->getMessage());
 
             return redirect()->back()->with('error', 'Something went wrong! Please try again.');
         }
     }
 
+
     public function destroy($id)
     {
         $category = Category::find($id);
         if ($category) {
             $user = Auth::user();
-            $note = 'Category "' . $category->name . '" created by ' . ($user->name ?? 'Unknown User');
+            $note = 'Category "' . $category->name . '" Deleted by ' . ($user->name ?? 'Unknown User');
             CategoryLog::create([
                 'note' => $note,
                 'category_name' => $category->name,
