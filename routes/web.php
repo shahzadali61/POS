@@ -21,7 +21,7 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::delete('brand/category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
     Route::get('category/log', [CategoryController::class, 'category_log'])->name('category.log');
     Route::get('brands', [BrandController::class, 'index'])->name('brands');
-    Route::post('brand/store', [BrandController::class, 'store'])->name('brand.store');
+    Route::post('brand/store', action: [BrandController::class, 'store'])->name('brand.store');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
     Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
     Route::delete('brand/delete/{id}', [BrandController::class, 'destroy'])->name('brand.delete');

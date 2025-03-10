@@ -39,11 +39,18 @@ defineProps({
 const form = useForm({
     name: '',
     description: '',
+    id:null
 })
 const editForm = useForm({
     id: null,
     name: '',
     description: '',
+});
+const brandForm = useForm({
+    id: null,
+    name: '',
+    description: '',
+    category_id: null,
 });
 const saveCategory = () => {
     isLoading.value = true;
@@ -77,7 +84,10 @@ const deleteCategory = (id: number) => {
         },
     });
 };
+
 const isEditModalVisible = ref(false);
+const isbrandModalVisible = ref(false);
+const selectedCategoryName = ref('');
 
 const openEditModal = (category: any) => {
     editForm.id = category.id;
@@ -85,6 +95,23 @@ const openEditModal = (category: any) => {
     editForm.description = category.description;
     isEditModalVisible.value = true;
 };
+const openBrandModal = (record: any) => {
+    selectedCategoryName.value = record.name;
+    brandForm.category_id = record.id;
+    isbrandModalVisible.value = true;
+};
+const saveBrand = () => {
+    isLoading.value = true;
+    brandForm.post(route('user.brand.store'), {
+        onSuccess: () => {
+            brandForm.reset();
+            message.success(usePage().props.flash.success);
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    })
+}
 
 // Update category
 const updateCategory = () => {
@@ -95,7 +122,7 @@ const updateCategory = () => {
             message.success(usePage().props.flash.success);
         },
         onFinish: () => {
-            isLoading.value = false; // ✅ Stop loading
+            isLoading.value = false;
         }
     });
 };
@@ -110,7 +137,7 @@ const updateCategory = () => {
     <AdminLayout>
 
         <a-row class="justify-between">
-            <a-col :span="10">
+            <a-col :lg="10" :md="24">
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
                     <h2 class="text-lg font-semibold mb-4">Create Category</h2>
@@ -134,9 +161,9 @@ const updateCategory = () => {
                     </form>
                 </div>
             </a-col>
-            <a-col :span="12">
+            <a-col :lg="12" :md="24">
 
-                <div class="bg-white rounded-lg p-4 shadow-md ">
+                <div class="bg-white rounded-lg p-4 shadow-md  lg:mt-0 sm:mt-4">
 
                     <div  class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">Category List</h2>
@@ -145,7 +172,7 @@ const updateCategory = () => {
                         </Link>
 
                     </div>
-                    <a-table :columns="columns" :data-source="categories.data" rowKey="id">
+                    <a-table :columns="columns" :data-source="categories.data" rowKey="id" :scroll="{ x: 200 }" >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'id'">
                                 <a>{{ record.id }}</a>
@@ -160,8 +187,18 @@ const updateCategory = () => {
                                 {{ record.description ?? 'N/A' }}
                             </template>
                             <template v-else-if="column.dataIndex === 'action'">
-                                <a-button type="link" @click="openEditModal(record)">Edit</a-button>
-                                <a-button danger @click="deleteCategory(record.id)">Delete</a-button>
+                                <a-tooltip placement="top">
+                                    <template #title>Edit</template>
+                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Delete</template>
+                                    <a-button type="link"  @click="deleteCategory(record.id)"><i class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Add Brand</template>
+                                    <a-button type="link" @click="openBrandModal(record)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
                             </template>
                         </template>
                     </a-table>
@@ -192,19 +229,30 @@ const updateCategory = () => {
                 </div>
             </form>
         </a-modal>
+        <a-modal v-model:visible="isbrandModalVisible" title="Add Brand " @cancel="isbrandModalVisible = false"
+            :footer="null">
+            <h3 class="text-lg font-semibold">{{ selectedCategoryName }}</h3>
+            <form @submit.prevent="saveBrand()">
+                <a-input v-model:value="brandForm.category_id" class="mt-2 w-full" placeholder="Enter Name" />
+                <div class="mb-4">
+                    <label class="block">Name</label>
+                    <a-input v-model:value="brandForm.name" class="mt-2 w-full" placeholder="Enter Name" />
+                    <div v-if="brandForm.errors.name" class="text-red-500">{{ brandForm.errors.name }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Description</label>
+                    <a-textarea v-model:value="brandForm.description" class="mt-2 w-full" placeholder="Description"
+                        :auto-size="{ minRows: 2, maxRows: 5 }" />
+                    <div v-if="brandForm.errors.description" class="text-red-500">{{ brandForm.errors.description }}</div>
+                </div>
+                <div class="text-right">
+                    <a-button type="default" @click="isbrandModalVisible = false">Cancel</a-button>
+                    <a-button type="primary" html-type="submit" class="ml-2">Save</a-button>
+                </div>
+            </form>
+        </a-modal>
     </AdminLayout>
 </template>
 <style scoped>
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(218, 217, 217, 0.205);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-}
+
 </style>
