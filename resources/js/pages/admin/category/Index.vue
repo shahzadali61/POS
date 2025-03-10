@@ -189,7 +189,7 @@ const updateCategory = () => {
                             <template v-else-if="column.dataIndex === 'action'">
                                 <a-tooltip placement="top">
                                     <template #title>Edit</template>
-                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Delete</template>
@@ -197,7 +197,7 @@ const updateCategory = () => {
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Add Brand</template>
-                                    <a-button type="link" @click="openBrandModal(record)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openBrandModal(record)"><i class="fa fa-creative-commons" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                             </template>
                         </template>
