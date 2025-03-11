@@ -48,7 +48,6 @@ class ProductController extends Controller
                     'user_id' => Auth::id(),
                 ]);
             }
-
             DB::commit();
             return redirect()->back()->with('success', 'Product created successfully.');
 
