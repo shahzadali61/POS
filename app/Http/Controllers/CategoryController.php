@@ -82,6 +82,7 @@ class CategoryController extends Controller
                 'user_id' => Auth::id(),
             ]);
             $category->delete();
+            $category->brands()->delete();
             return redirect()->back()->with('success', 'category deleted successfully.');
         }
         return redirect()->back()->with('error', 'category not found.');

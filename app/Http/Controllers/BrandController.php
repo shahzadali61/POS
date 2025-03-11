@@ -21,6 +21,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::where('user_id', Auth::id())
+        ->with( 'category')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 

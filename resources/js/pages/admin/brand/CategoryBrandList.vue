@@ -100,7 +100,10 @@ const updateBrand = () => {
                             <a-button class="mx-2" type="default">Back</a-button>
                         </Link>
                         <Link :href="route('user.brand-log')">
-                            <a-button type="default">Brand Logs</a-button>
+                            <a-button class="mx-2" type="default">Brand Logs</a-button>
+                        </Link>
+                        <Link :href="route('user.brands')" >
+                            <a-button class="mx-2" type="default">All Brand List</a-button>
                         </Link>
                         </div>
                     </div>

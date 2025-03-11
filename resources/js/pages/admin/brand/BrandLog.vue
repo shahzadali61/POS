@@ -28,8 +28,11 @@ defineProps({
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold">Category Logs</h2>
-                       
+                        <h2 class="text-lg font-semibold">Brand Logs</h2>
+                        <Link :href="route('user.brands')" >
+                            <a-button type="default">Brand List</a-button>
+                        </Link>
+
                     </div>
 
                     <a-table v-if="BrandLog" :columns="columns" :data-source="BrandLog.data" rowKey="id">

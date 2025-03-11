@@ -66,8 +66,8 @@ const saveCategory = () => {
 }
 const deleteCategory = (id: number) => {
     Modal.confirm({
-        title: 'Are you sure you want to delete this Category?',
-        content: 'This action cannot be undone.',
+        title: 'Confirm Category Deletion',
+        content: 'Deleting this category will also remove all associated brands. This action is irreversible. Are you sure you want to proceed?',
         okText: 'Yes, Delete',
         okType: 'danger',
         cancelText: 'Cancel',
@@ -137,7 +137,7 @@ const updateCategory = () => {
     <Head title="Category" />
 
         <a-row class="justify-between">
-            <a-col :lg="10" :md="24">
+            <a-col :lg="8" :md="24">
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
                     <h2 class="text-lg font-semibold mb-4">Create Category</h2>
@@ -161,7 +161,7 @@ const updateCategory = () => {
                     </form>
                 </div>
             </a-col>
-            <a-col :lg="12" :md="24">
+            <a-col :lg="15" :md="24">
 
                 <div class="bg-white rounded-lg p-4 shadow-md  lg:mt-0 sm:mt-4">
 
@@ -173,9 +173,9 @@ const updateCategory = () => {
 
                     </div>
                     <a-table :columns="columns" :data-source="categories.data" rowKey="id" :scroll="{ x: 200 }" >
-                        <template #bodyCell="{ column, record }">
+                        <template #bodyCell="{ column, record,index }">
                             <template v-if="column.dataIndex === 'id'">
-                                <a>{{ record.id }}</a>
+                                {{ index+1 }}
                             </template>
                             <template v-if="column.dataIndex === 'name'">
                                 <a>{{ record.name }}</a>

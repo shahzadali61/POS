@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
@@ -25,8 +26,9 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::get('brand/list/{slug}', action: [BrandController::class, 'related_brand_list'])->name('related-brand-list');
     Route::delete('brand/delete/{id}', [BrandController::class, 'destroy'])->name('brand.delete');
     Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
-    Route::get('brand/log', [BrandController::class, 'brand_log'])->name('brand-log');
+    Route::get('brand/logs', [BrandController::class, 'brand_log'])->name('brand-log');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
+    Route::post('product/store', action: [ProductController::class, 'store'])->name('product.store');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
