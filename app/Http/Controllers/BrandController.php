@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Brand;
 use App\Models\BrandLog;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -24,6 +25,22 @@ class BrandController extends Controller
 
         return Inertia::render('admin/brand/Index', compact('brands'));
     }
+    public function related_brand_list($slug)
+    {
+        $category = Category::where('slug', $slug)->first();
+
+        if ($category) {
+            $brands = $category->brands()
+                ->with(['user', 'category'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            return Inertia::render('admin/brand/CategoryBrandList', compact('brands', 'category'));
+        } else {
+            return redirect()->back()->with('error', 'Record Not Found');
+        }
+    }
+
     public function edit($id)
     {
         $brand = Brand::find($id);
@@ -102,10 +119,19 @@ class BrandController extends Controller
 
         return redirect()->back()->with('success', 'Brand Update successfully');
     }
+
     public function destroy($id)
     {
         $brand = Brand::find($id);
         if ($brand) {
+            $user = Auth::user();
+            $note = 'Brand "' . $brand->name . '" Deleted by ' . ($user->name ?? 'Unknown User');
+            BrandLog::create([
+                'note' => $note,
+                'brand_name' => $brand->name,
+                'brand_id' => $brand->id,
+                'user_id' => Auth::id(),
+            ]);
             $brand->delete();
             return redirect()->back()->with('success', 'Brand deleted successfully.');
         }

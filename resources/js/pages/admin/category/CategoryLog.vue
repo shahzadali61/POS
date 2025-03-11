@@ -22,8 +22,8 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Category Logs" />
     <AdminLayout>
+    <Head title="Category Logs" />
         <a-row>
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md">

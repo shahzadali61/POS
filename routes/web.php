@@ -22,9 +22,10 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::get('category/log', [CategoryController::class, 'category_log'])->name('category.log');
     Route::get('brands', [BrandController::class, 'index'])->name('brands');
     Route::post('brand/store', action: [BrandController::class, 'store'])->name('brand.store');
+    Route::get('brand/list/{slug}', action: [BrandController::class, 'related_brand_list'])->name('related-brand-list');
+    Route::delete('brand/delete/{id}', [BrandController::class, 'destroy'])->name('brand.delete');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
     Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
-    Route::delete('brand/delete/{id}', [BrandController::class, 'destroy'])->name('brand.delete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

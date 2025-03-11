@@ -105,6 +105,7 @@ const saveBrand = () => {
     brandForm.post(route('user.brand.store'), {
         onSuccess: () => {
             brandForm.reset();
+            isbrandModalVisible.value = false;
             message.success(usePage().props.flash.success);
         },
         onFinish: () => {
@@ -132,9 +133,8 @@ const updateCategory = () => {
       <div v-if="isLoading" class="loading-overlay" >
         <a-spin size="large" />
     </div>
-
-    <Head title="Category" />
     <AdminLayout>
+    <Head title="Category" />
 
         <a-row class="justify-between">
             <a-col :lg="10" :md="24">
@@ -189,7 +189,7 @@ const updateCategory = () => {
                             <template v-else-if="column.dataIndex === 'action'">
                                 <a-tooltip placement="top">
                                     <template #title>Edit</template>
-                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Delete</template>
@@ -198,6 +198,10 @@ const updateCategory = () => {
                                 <a-tooltip placement="top">
                                     <template #title>Add Brand</template>
                                     <a-button type="link" @click="openBrandModal(record)"><i class="fa fa-creative-commons" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Brand List</template>
+                                    <Link :href="route('user.related-brand-list',record.slug)" class="text-blue-500 hover:underline"><i class="fa fa-list text-slate-800" aria-hidden="true"></i></Link>
                                 </a-tooltip>
                             </template>
                         </template>
@@ -229,11 +233,12 @@ const updateCategory = () => {
                 </div>
             </form>
         </a-modal>
-        <a-modal v-model:visible="isbrandModalVisible" title="Add Brand " @cancel="isbrandModalVisible = false"
+        <!-- brand Modal  -->
+        <a-modal v-model:visible="isbrandModalVisible" title="Add Brand  "  @cancel="isbrandModalVisible = false"
             :footer="null">
-            <h3 class="text-lg font-semibold">{{ selectedCategoryName }}</h3>
+            <h4 class="text-md"> Category ({{ selectedCategoryName }})</h4>
             <form @submit.prevent="saveBrand()">
-                <a-input v-model:value="brandForm.category_id" class="mt-2 w-full" placeholder="Enter Name" />
+                <a-input hidden v-model:value="brandForm.category_id" class="mt-2 w-full" placeholder="Enter Name" />
                 <div class="mb-4">
                     <label class="block">Name</label>
                     <a-input v-model:value="brandForm.name" class="mt-2 w-full" placeholder="Enter Name" />

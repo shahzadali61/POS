@@ -29,7 +29,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => [
                 'required', 'string', 'max:255',
-                Rule::unique('categories', 'name')->whereNull('deleted_at'),
+                Rule::unique('categories', 'name')->where('user_id', Auth::id()) ->whereNull('deleted_at'),
             ],
             'description' => 'nullable|string',
         ]);
@@ -90,10 +90,15 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('categories', 'name')
+                    ->where('user_id', Auth::id())
+                    ->whereNull('deleted_at')
+                    ->ignore($id),
+            ],
             'description' => 'nullable|string',
         ]);
-
         $category = Category::find($id);
 
         if (!$category) {
@@ -134,7 +139,7 @@ class CategoryController extends Controller
     public function category_log(){
 
         $CategoryLog = CategoryLog::where('user_id', Auth::id())
-        ->with('category', 'user') // ✅ Eager load relationships
+        ->with('category', 'user') //Eager load relationships
         ->orderBy('created_at', 'desc')
         ->paginate(10);
 
