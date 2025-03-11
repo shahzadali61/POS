@@ -95,9 +95,14 @@ const updateBrand = () => {
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Brand List - {{ category.name }}</h2>
 
-                        <Link :href="route('user.categories')">
-                            <a-button type="default">Back</a-button>
+                        <div>
+                            <Link :href="route('user.categories')">
+                            <a-button class="mx-2" type="default">Back</a-button>
                         </Link>
+                        <Link :href="route('user.brand-log')">
+                            <a-button type="default">Brand Logs</a-button>
+                        </Link>
+                        </div>
                     </div>
 
                     <!-- Display table -->

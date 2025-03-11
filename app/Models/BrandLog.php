@@ -5,11 +5,9 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Brand;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BrandLog extends Model
 {
-    use SoftDeletes;
     protected $fillable = [
         'note',
         'brand_name',

@@ -139,7 +139,7 @@ class CategoryController extends Controller
     public function category_log(){
 
         $CategoryLog = CategoryLog::where('user_id', Auth::id())
-        ->with('category', 'user') //Eager load relationships
+        ->with( 'user') //Eager load relationships
         ->orderBy('created_at', 'desc')
         ->paginate(10);
 

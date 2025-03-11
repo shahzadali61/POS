@@ -41,16 +41,6 @@ class BrandController extends Controller
             return redirect()->back()->with('error', 'Record Not Found');
         }
     }
-
-    public function edit($id)
-    {
-        $brand = Brand::find($id);
-        if ($brand) {
-            return Inertia::render('admin/brand/Edit', compact('brand'));
-        }
-        return redirect()->back()->with('error', 'Brand not found.');
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -165,5 +155,16 @@ class BrandController extends Controller
             return redirect()->back()->with('success', 'Brand deleted successfully.');
         }
         return redirect()->back()->with('error', 'Brand not found.');
+    }
+    public function brand_log(){
+
+        $brandLog = BrandLog::where('user_id', Auth::id())
+        ->with( 'user') //Eager load relationships
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+        return Inertia::render('admin/brand/BrandLog', [
+            'BrandLog' => $brandLog,
+        ]);
     }
 }
