@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Inertia\Inertia;
 use App\Models\Brand;
 use App\Models\BrandLog;
@@ -102,22 +103,50 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('brands', 'name')
+                    ->where('user_id', Auth::id())
+                    ->whereNull('deleted_at')
+                    ->ignore($id),
+            ],
             'description' => 'nullable|string',
         ]);
-
         $brand = Brand::find($id);
+
         if (!$brand) {
-            return redirect()->back()->with('error', 'Brand not found.');
+            return redirect()->back()->with('error', 'Category not found.');
         }
 
-        $brand->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'slug' => Str::slug($request->name),
-        ]);
+        DB::beginTransaction();
+        try {
+            $oldName = $brand->name; // ✅ Save old name before updating
+            $brand->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'slug' => Str::slug($request->name),
+            ]);
 
-        return redirect()->back()->with('success', 'Brand Update successfully');
+            $user = Auth::user();
+            $note = 'Brand "' . $oldName . '" updated to "' . $brand->name . '" by ' . ($user->name ?? 'Unknown User');
+
+            BrandLog::create([
+                'note' => $note,
+                'brand_id' => $brand->id,
+                'brand_name' => $brand->name, // ✅ Store updated name
+                'user_id' => Auth::id(),
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Brand updated successfully.');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Brand update failed: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
+        }
     }
 
     public function destroy($id)

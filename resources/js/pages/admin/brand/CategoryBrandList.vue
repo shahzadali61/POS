@@ -57,6 +57,32 @@ const deleteBrand = (id: number) => {
         },
     });
 };
+const isEditModalVisible = ref(false);
+const editForm = useForm({
+    id: null,
+    name: '',
+    description: '',
+});
+const openEditModal =(brands:any)=>{
+    editForm.id = brands.id;
+    editForm.name = brands.name;
+    editForm.description = brands.description;
+    isEditModalVisible.value = true;
+    isEditModalVisible.value = true;
+}
+// Update brand
+const updateBrand = () => {
+    isLoading.value = true;
+    editForm.put(route('user.brand.update', editForm.id), {
+        onSuccess: () => {
+            isEditModalVisible.value = false;
+            message.success(usePage().props.flash.success);
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
+};
 
 </script>
 
@@ -98,6 +124,10 @@ const deleteBrand = (id: number) => {
                                     <template #title>Delete</template>
                                     <a-button type="link"  @click="deleteBrand(record.id)"><i class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Edit</template>
+                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
                             </template>
 
                         </template>
@@ -105,5 +135,27 @@ const deleteBrand = (id: number) => {
                 </div>
             </a-col>
         </a-row>
+          <!-- Edit Category Modal -->
+          <a-modal v-model:visible="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
+            :footer="null">
+            <form @submit.prevent="updateBrand()">
+                <div class="mb-4">
+                    <label class="block">Name</label>
+                    <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
+                    <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Description</label>
+                    <a-textarea v-model:value="editForm.description" class="mt-2 w-full" placeholder="Description"
+                        :auto-size="{ minRows: 2, maxRows: 5 }" />
+                    <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
+                </div>
+                <div class="text-right">
+                    <a-button type="default" @click="isEditModalVisible = false">Cancel</a-button>
+                    <a-button type="primary" html-type="submit" class="ml-2">Update</a-button>
+                </div>
+            </form>
+
+        </a-modal>
     </AdminLayout>
 </template>
