@@ -103,7 +103,6 @@ const updateProduct = () => {
                         </Link>
                         </div>
                     </div>
-
                     <!-- Display table -->
                     <a-table v-if="products" :columns="columns" :data-source="products.data" rowKey="id" bordered>
                         <template #bodyCell="{ column, record, index }">
