@@ -45,9 +45,18 @@ const deleteProduct = (id: number) => {
     });
 };
 const isEditModalVisible = ref(false);
+const isPurchaseModalVisible = ref(false);
+const selectedProductName = ref("");
 const editForm = useForm({
     id: null,
     name: '',
+    description: '',
+});
+const purchaseForm = useForm({
+    id: null,
+    purchase_price: '',
+    qty: '',
+    remaining_qty: '',
     description: '',
 });
 const openEditModal =(product:any)=>{
@@ -55,6 +64,11 @@ const openEditModal =(product:any)=>{
     editForm.name = product.name;
     editForm.description = product.description;
     isEditModalVisible.value = true;
+}
+const openPurchaseDetailModal =(product:any)=>{
+    purchaseForm.id = product.id;
+    isPurchaseModalVisible.value = true;
+    selectedProductName.value = product.name;
 }
 // Update brand
 const updateProduct = () => {
@@ -115,6 +129,10 @@ const updateProduct = () => {
                                     <template #title>Edit</template>
                                     <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Add Purchase Details</template>
+                                    <a-button type="link" @click="openPurchaseDetailModal(record)"><i class="fa fa-shopping-cart text-emerald-950" aria-hidden="true"></i></a-button>
+                                </a-tooltip>
                             </template>
 
                         </template>
@@ -140,6 +158,33 @@ const updateProduct = () => {
                 <div class="text-right">
                     <a-button type="default" @click="isEditModalVisible = false">Cancel</a-button>
                     <a-button type="primary" html-type="submit" class="ml-2">Update</a-button>
+                </div>
+            </form>
+
+        </a-modal>
+          <!-- Edit Purchase Product Detail Modal -->
+          <a-modal  width="1000px" v-model:visible="isPurchaseModalVisible" title="Product Purchase Detail" @cancel="isPurchaseModalVisible = false"
+            :footer="null">
+            <h4 class="text-md">Product - ({{ selectedProductName }})</h4>
+            <form @submit.prevent="updateProduct()">
+            <a-row>
+
+
+            </a-row>
+                <div class="mb-4">
+                    <label class="block">Name</label>
+                    <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
+                    <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Description</label>
+                    <a-textarea v-model:value="editForm.description" class="mt-2 w-full" placeholder="Description"
+                        :auto-size="{ minRows: 2, maxRows: 5 }" />
+                    <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
+                </div>
+                <div class="text-right">
+                    <a-button type="default" @click="isPurchaseModalVisible = false">Cancel</a-button>
+                    <a-button type="primary" html-type="submit" class="ml-2">Save</a-button>
                 </div>
             </form>
 
