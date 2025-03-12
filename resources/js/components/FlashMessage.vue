@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
 import { watch } from 'vue';
 import { message } from 'ant-design-vue';
@@ -16,6 +16,9 @@ watch(() => page.props.flash, (flash) => {
 });
 </script>
 
-<template>
-    <!-- Empty template, because we only need to watch for messages -->
+<template >
+       <div style="display: none;"></div>
+
+
+
 </template>

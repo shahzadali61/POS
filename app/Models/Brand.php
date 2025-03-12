@@ -43,6 +43,4 @@ protected static function boot()
         }
     });
 }
-
-
 }
