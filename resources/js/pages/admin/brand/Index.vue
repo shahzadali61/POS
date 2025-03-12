@@ -1,21 +1,13 @@
 <script setup lang="ts">
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
-import { message, Modal } from "ant-design-vue";
+import {  Modal } from "ant-design-vue";
 import dayjs from "dayjs";
-import { watch } from 'vue';
 import { ref } from "vue";
 const isLoading = ref(false);
-const page = usePage();
 
-watch(() => page.props.flash, (flash) => {
-    if (flash?.success) {
-        message.success(flash.success);
-    }
-    if (flash?.error) {
-        message.error(flash.error);
-    }
-});
+
+
 
 const columns = [
   { title: "Sr.", dataIndex: "id", key: "id" },

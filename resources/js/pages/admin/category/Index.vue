@@ -1,31 +1,14 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
-import { message, Modal } from 'ant-design-vue';
+import {  Modal } from 'ant-design-vue';
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { watch } from 'vue';
 import dayjs from "dayjs";
 const isLoading = ref(false);
-
-const page = usePage();
-
-
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
-
-// 🔔 Using the following code to display Ant Design toast notifications 👇
-watch(() => page.props.flash, (flash) => {
-    if (flash?.success) {
-        message.success(flash.success);
-    }
-    if (flash?.error) {
-        message.error(flash.error);
-    }
-});
-
 const columns = [
     { title: 'Sr.', dataIndex: 'id', key: 'id' },
     { title: 'Name', dataIndex: 'name', key: 'name' },

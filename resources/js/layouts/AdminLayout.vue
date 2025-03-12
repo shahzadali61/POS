@@ -3,6 +3,8 @@ import Sidebar from "@/components/admin/Sidebar.vue";
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { useFlashMessages } from '@/composables/useFlashMessages';
+useFlashMessages();
 
 // Sidebar state
 const collapsed = ref(false);
