@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { Head, Link , usePage, useForm} from '@inertiajs/vue3';
+import { Head, Link , useForm} from '@inertiajs/vue3';
 import { Modal } from 'ant-design-vue';
 import dayjs from "dayjs";
 import { ref } from 'vue';
