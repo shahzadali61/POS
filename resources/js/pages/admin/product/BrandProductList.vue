@@ -84,7 +84,6 @@ const updateProduct = () => {
 };
 
 </script>
-
 <template>
     <AdminLayout>
         <Head title="Product List" />
