@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductLog extends Model
@@ -12,4 +13,10 @@ class ProductLog extends Model
         'user_id',
         'product_id',
     ];
+
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
+use Exception;
+use Inertia\Inertia;
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductLog;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductController extends Controller
 {
+    public function index()
+    {
+        $products = Product::where('user_id', Auth::id())
+        ->with( 'brand')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return Inertia::render('admin/product/Index', compact('products'));
+    }
     public function store(Request $request)
     {
         $request->validate([
@@ -59,5 +72,94 @@ class ProductController extends Controller
 
             return redirect()->back()->with('error', 'Something went wrong! Please try again.');
         }
+    }
+
+    public function related_product_list($slug)
+    {
+        $brand = Brand::where('slug', $slug)->first();
+
+        if ($brand) {
+            $products = $brand->products()
+                ->with(['brand'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            return Inertia::render('admin/product/BrandProductList', compact('products', 'brand'));
+        } else {
+            return redirect()->back()->with('error', 'Record Not Found');
+        }
+    }
+    public function destroy($id)
+    {
+        $brand = Product::find($id);
+        if ($brand) {
+            $user = Auth::user();
+            $note = 'Product "' . $brand->name . '" Deleted by ' . ($user->name ?? 'Unknown User');
+            ProductLog::create([
+                'note' => $note,
+                'product_name' => $brand->name,
+                'product_id' => $brand->id,
+                'user_id' => Auth::id(),
+            ]);
+            $brand->delete();
+            return redirect()->back()->with('success', 'Product deleted successfully.');
+        }
+        return redirect()->back()->with('error', 'Product not found.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('products', 'name')
+                    ->where('user_id', Auth::id())
+                    ->whereNull('deleted_at')
+                    ->ignore($id),
+            ],
+            'description' => 'nullable|string',
+        ]);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $oldName = $product->name;
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            $user = Auth::user();
+            $note = 'Product "' . $oldName . '" updated to "' . $product->name . '" by ' . ($user->name ?? 'Unknown User');
+
+            ProductLog::create([
+                'note' => $note,
+                'product_id' => $product->id,
+                'product_name' => $product->name,
+                'user_id' => Auth::id(),
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Product updated successfully.');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            Log::error('Brand update failed: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
+        }
+    }
+    public function product_log()
+    {
+        $productLogs = ProductLog::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        return Inertia::render('admin/product/ProductLog', [
+            'productLog' => $productLogs,
+        ]);
     }
 }

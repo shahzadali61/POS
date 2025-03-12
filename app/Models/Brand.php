@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,4 +28,10 @@ class Brand extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+    public function products()
+{
+    return $this->hasMany(Product::class, 'brand_id');
+}
+
+
 }

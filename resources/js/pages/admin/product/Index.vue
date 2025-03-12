@@ -26,27 +26,26 @@ const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Description', dataIndex: 'description', key: 'description' },
-    { title: 'Category', dataIndex: 'category', key: 'category' },
+    { title: 'Brand', dataIndex: 'brand', key: 'brand' },
     { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
     { title: 'Action', dataIndex: 'action', key: 'action' },
 ];
 
 // Receive brands as a prop from Inertia
 defineProps({
-    brands: Object,
-    category: Object,
+    products: Object,
 });
 const form = useForm({});
-const deleteBrand = (id: number) => {
+const deleteProduct = (id: number) => {
     Modal.confirm({
-        title: 'Are you sure you want to delete this Brand?',
+        title: 'Are you sure you want to delete this Product?',
         content: 'This action cannot be undone.',
         okText: 'Yes, Delete',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
             isLoading.value = true;
-            form.delete(route('user.brand.delete', id), {
+            form.delete(route('user.product.delete', id), {
                 onSuccess: () => {
                     message.success(usePage().props.flash.success);
                 },
@@ -63,16 +62,16 @@ const editForm = useForm({
     name: '',
     description: '',
 });
-const openEditModal =(brands:any)=>{
-    editForm.id = brands.id;
-    editForm.name = brands.name;
-    editForm.description = brands.description;
+const openEditModal =(product:any)=>{
+    editForm.id = product.id;
+    editForm.name = product.name;
+    editForm.description = product.description;
     isEditModalVisible.value = true;
 }
 // Update brand
-const updateBrand = () => {
+const updateProduct = () => {
     isLoading.value = true;
-    editForm.put(route('user.brand.update', editForm.id), {
+    editForm.put(route('user.product.update', editForm.id), {
         onSuccess: () => {
             isEditModalVisible.value = false;
             message.success(usePage().props.flash.success);
@@ -87,28 +86,22 @@ const updateBrand = () => {
 
 <template>
     <AdminLayout>
-        <Head title="Brand List" />
+        <Head title="Product List" />
         <a-row>
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold">Brand List - {{ category.name }}</h2>
+                        <h2 class="text-lg font-semibold">Product List </h2>
 
                         <div>
-                            <Link :href="route('user.categories')">
-                            <a-button class="mx-2" type="default">Back</a-button>
-                        </Link>
-                        <Link :href="route('user.brand-log')">
-                            <a-button class="mx-2" type="default">Brand Logs</a-button>
-                        </Link>
-                        <Link :href="route('user.brands')" >
-                            <a-button class="mx-2" type="default">All Brand List</a-button>
+                        <Link :href="route('user.product-log')">
+                            <a-button class="mx-2" type="default">Product Logs</a-button>
                         </Link>
                         </div>
                     </div>
 
                     <!-- Display table -->
-                    <a-table v-if="brands" :columns="columns" :data-source="brands.data" rowKey="id" bordered>
+                    <a-table v-if="products" :columns="columns" :data-source="products.data" rowKey="id" bordered>
                         <template #bodyCell="{ column, record, index }">
                             <template v-if="column.dataIndex === 'id'">
                                 {{ index + 1 }}
@@ -119,8 +112,8 @@ const updateBrand = () => {
                             <template v-if="column.dataIndex === 'description'">
                                 {{ record.description ? record.description : 'N/A'}}
                             </template>
-                            <template v-if="column.dataIndex === 'category'">
-                                {{ record.category.slug}}
+                            <template v-if="column.dataIndex === 'brand'">
+                                {{ record.brand.slug}}
                             </template>
 
                             <template v-else-if="column.dataIndex === 'created_at'">
@@ -129,7 +122,7 @@ const updateBrand = () => {
                             <template v-else-if="column.dataIndex === 'action'">
                             <a-tooltip placement="top">
                                     <template #title>Delete</template>
-                                    <a-button type="link"  @click="deleteBrand(record.id)"><i class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
+                                    <a-button type="link"  @click="deleteProduct(record.id)"><i class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Edit</template>
@@ -142,10 +135,10 @@ const updateBrand = () => {
                 </div>
             </a-col>
         </a-row>
-          <!-- Edit Category Modal -->
-          <a-modal v-model:visible="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
+          <!-- Edit Product Modal -->
+          <a-modal v-model:visible="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
             :footer="null">
-            <form @submit.prevent="updateBrand()">
+            <form @submit.prevent="updateProduct()">
                 <div class="mb-4">
                     <label class="block">Name</label>
                     <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />

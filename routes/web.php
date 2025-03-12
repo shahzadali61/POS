@@ -28,7 +28,13 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::put('brand/update/{id}', [BrandController::class, 'update'])->name('brand.update');
     Route::get('brand/logs', [BrandController::class, 'brand_log'])->name('brand-log');
     Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('brand.edit');
+    Route::get('products', [ProductController::class, 'index'])->name('products');
     Route::post('product/store', action: [ProductController::class, 'store'])->name('product.store');
+    Route::get('product/list/{slug}', action: [ProductController::class, 'related_product_list'])->name('related-product-list');
+    Route::delete('product/delete/{id}', [ProductController::class, 'destroy'])->name('product.delete');
+    Route::put('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
+
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

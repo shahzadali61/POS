@@ -33,6 +33,12 @@ const emit = defineEmits(['update:collapsed']);
         </Link>
       </a-menu-item>
       <a-menu-item key="4">
+        <Link :href="route('user.products')">
+          <UserOutlined />
+          <span>Products</span>
+        </Link>
+      </a-menu-item>
+      <a-menu-item key="5">
         <Link :href="route('profile.edit')">
           <UserOutlined />
           <span>Profile</span>
