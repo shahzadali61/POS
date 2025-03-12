@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Sidebar from '@/Components/admin/Sidebar.vue';
+import Sidebar from "@/components/admin/Sidebar.vue";
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
