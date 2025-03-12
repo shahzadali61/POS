@@ -3,8 +3,19 @@ import AdminLayout from "@/layouts/AdminLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import { message, Modal } from "ant-design-vue";
 import dayjs from "dayjs";
-import { ref, onMounted } from "vue";
+import { watch } from 'vue';
+import { ref } from "vue";
 const isLoading = ref(false);
+const page = usePage();
+
+watch(() => page.props.flash, (flash) => {
+    if (flash?.success) {
+        message.success(flash.success);
+    }
+    if (flash?.error) {
+        message.error(flash.error);
+    }
+});
 
 const columns = [
   { title: "Sr.", dataIndex: "id", key: "id" },
@@ -17,15 +28,7 @@ const columns = [
 const formatDate = (date: string) => {
   return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
-onMounted(() => {
-  const page = usePage();
-  if (page.props.flash?.message) {
-    message.success(page.props.flash.message);
-  }
-  if (page.props.flash?.error) {
-    message.error(page.props.flash.error);
-  }
-});
+
 // Define props correctly
 defineProps({
   brands: Object,
@@ -57,7 +60,7 @@ const deleteBrand = (id: number) => {
       isLoading.value = true;
       form.delete(route("user.brand.delete", id), {
         onSuccess: () => {
-          message.success(usePage().props.flash.success);
+
         },
         onFinish: () => {
           isLoading.value = false;
@@ -82,7 +85,6 @@ const updateBrand = () => {
   editForm.put(route("user.brand.update", editForm.id), {
     onSuccess: () => {
       isEditModalVisible.value = false;
-      message.success(usePage().props.flash.success);
     },
     onFinish: () => {
       isLoading.value = false;
@@ -100,7 +102,6 @@ const saveProduct = () => {
     onSuccess: () => {
       productForm.reset();
       isproductModalVisible.value = false;
-      message.success(usePage().props.flash.success);
     },
     onFinish: () => {
       isLoading.value = false;

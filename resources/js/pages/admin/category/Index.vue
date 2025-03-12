@@ -3,10 +3,13 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { watch } from 'vue';
 import dayjs from "dayjs";
 const isLoading = ref(false);
+
+const page = usePage();
 
 
 const formatDate = (date: string) => {
@@ -14,13 +17,12 @@ const formatDate = (date: string) => {
 };
 
 // 🔔 Using the following code to display Ant Design toast notifications 👇
-onMounted(() => {
-    const page = usePage();
-    if (page.props.flash?.message) {
-        message.success(page.props.flash.message);
+watch(() => page.props.flash, (flash) => {
+    if (flash?.success) {
+        message.success(flash.success);
     }
-    if (page.props.flash?.error) {
-        message.error(page.props.flash.error);
+    if (flash?.error) {
+        message.error(flash.error);
     }
 });
 
@@ -57,7 +59,6 @@ const saveCategory = () => {
     form.post(route('user.category.store'), {
         onSuccess: () => {
             form.reset();
-            message.success(usePage().props.flash.success);
         },
         onFinish: () => {
             isLoading.value = false; // ✅ Stop loading
@@ -74,9 +75,6 @@ const deleteCategory = (id: number) => {
         onOk() {
             isLoading.value = true;
             form.delete(route('user.category.delete', id), {
-                onSuccess: () => {
-                    message.success(usePage().props.flash.success);
-                },
                 onFinish: () => {
             isLoading.value = false; // ✅ Stop loading
         }
@@ -106,7 +104,6 @@ const saveBrand = () => {
         onSuccess: () => {
             brandForm.reset();
             isbrandModalVisible.value = false;
-            message.success(usePage().props.flash.success);
         },
         onFinish: () => {
             isLoading.value = false;
@@ -120,7 +117,6 @@ const updateCategory = () => {
     editForm.put(route('user.category.update', editForm.id), {
         onSuccess: () => {
             isEditModalVisible.value = false;
-            message.success(usePage().props.flash.success);
         },
         onFinish: () => {
             isLoading.value = false;

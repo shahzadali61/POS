@@ -3,19 +3,20 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, Link , usePage, useForm} from '@inertiajs/vue3';
 import { message, Modal } from 'ant-design-vue';
 import dayjs from "dayjs";
-import { ref, onMounted } from 'vue';
+import { watch } from 'vue';
+import { ref } from 'vue';
 const isLoading = ref(false);
 
-onMounted(() => {
-    const page = usePage();
-    if (page.props.flash?.message) {
-        message.success(page.props.flash.message);
+const page = usePage();
+
+watch(() => page.props.flash, (flash) => {
+    if (flash?.success) {
+        message.success(flash.success);
     }
-    if (page.props.flash?.error) {
-        message.error(page.props.flash.error);
+    if (flash?.error) {
+        message.error(flash.error);
     }
 });
-
 // Format date function
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
@@ -48,11 +49,11 @@ const deleteProduct = (id: number) => {
             isLoading.value = true;
             form.delete(route('user.product.delete', id), {
                 onSuccess: () => {
-                    message.success(usePage().props.flash.success);
+
                 },
                 onFinish: () => {
-           isLoading.value = false;
-        }
+                isLoading.value = false;
+                }
             });
         },
     });
@@ -75,7 +76,6 @@ const updateProduct = () => {
     editForm.put(route('user.product.update', editForm.id), {
         onSuccess: () => {
             isEditModalVisible.value = false;
-            message.success(usePage().props.flash.success);
         },
         onFinish: () => {
             isLoading.value = false;
