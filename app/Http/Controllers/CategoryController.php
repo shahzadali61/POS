@@ -85,6 +85,7 @@ class CategoryController extends Controller
             $category->brands()->delete();
             return redirect()->back()->with('success', 'category deleted successfully.');
         }
+        
         return redirect()->back()->with('error', 'category not found.');
     }
 

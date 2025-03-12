@@ -89,17 +89,17 @@ class ProductController extends Controller
     }
     public function destroy($id)
     {
-        $brand = Product::find($id);
-        if ($brand) {
+        $product = Product::find($id);
+        if ($product) {
             $user = Auth::user();
-            $note = 'Product "' . $brand->name . '" Deleted by ' . ($user->name ?? 'Unknown User');
+            $note = 'Product "' . $product->name . '" Deleted by ' . ($user->name ?? 'Unknown User');
             ProductLog::create([
                 'note' => $note,
-                'product_name' => $brand->name,
-                'product_id' => $brand->id,
+                'product_name' => $product->name,
+                'product_id' => $product->id,
                 'user_id' => Auth::id(),
             ]);
-            $brand->delete();
+            $product->delete();
             return redirect()->back()->with('success', 'Product deleted successfully.');
         }
         return redirect()->back()->with('error', 'Product not found.');

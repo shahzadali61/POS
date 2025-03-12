@@ -153,6 +153,7 @@ class BrandController extends Controller
                 'user_id' => Auth::id(),
             ]);
             $brand->delete();
+            $brand->products()->delete();
             return redirect()->back()->with('success', 'Brand deleted successfully.');
         }
         return redirect()->back()->with('error', 'Brand not found.');

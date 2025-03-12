@@ -21,4 +21,14 @@ class Category extends Model
     {
         return $this->hasMany(Brand::class);
     }
+    protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($category) {
+        foreach ($category->brands as $brand) {
+            $brand->delete(); // Yeh brand delete karega aur brand ke deleting event se products bhi delete ho jayenge
+        }
+    });
+}
 }

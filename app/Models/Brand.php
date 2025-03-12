@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Brand extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'slug',
@@ -31,6 +32,16 @@ class Brand extends Model
     public function products()
 {
     return $this->hasMany(Product::class, 'brand_id');
+}
+protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($brand) {
+        foreach ($brand->products as $product) {
+            $product->delete();
+        }
+    });
 }
 
 
