@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import { UserOutlined, DatabaseOutlined } from '@ant-design/icons-vue';
-
-const props = defineProps<{ collapsed: boolean }>();
-const emit = defineEmits(['update:collapsed']);
-
 </script>
 
 <template>

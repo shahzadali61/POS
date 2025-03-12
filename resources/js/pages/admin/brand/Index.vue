@@ -213,7 +213,7 @@ const saveProduct = () => {
     <!-- Product Modal  -->
     <a-modal
       v-model:visible="isproductModalVisible"
-      title="Add Product  "
+      title="Add Brand  "
       @cancel="isproductModalVisible = false"
       :footer="null"
     >
