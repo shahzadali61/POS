@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\PurchaseProduct;
 use App\Models\PurchaseProductLog;
@@ -58,4 +60,45 @@ class PurchaseProductController extends Controller
             return redirect()->back()->with('error', 'Something went wrong! Please try again.');
         }
     }
+
+
+    public function relatedPurchaseProductList($slug)
+{
+    $product = Product::where('slug', $slug)->first();
+
+    if ($product) {
+        $purchaseProducts = $product->purchaseProducts()
+            ->with(['product'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return Inertia::render('admin/product/RelatedProductList', compact('product', 'purchaseProducts'));
+    } else {
+        return redirect()->back()->with('error', 'Record Not Found');
+    }
+}
+
+public function destroy($id)
+{
+    $purchaseProduct = PurchaseProduct::find($id);
+
+    if ($purchaseProduct) {
+        $user = Auth::user();
+        $note = 'Product detail "' . $purchaseProduct->product->name . '" Purchase Price | Sale price | stock   deleted by ' . ($user->name ?? 'Unknown User');
+
+        PurchaseProductLog::create([
+            'note' => $note,
+            'product_name' => $purchaseProduct->product->name,
+            'purchase_id' => $purchaseProduct->id,
+            'user_id' => Auth::id(),
+        ]);
+
+        $purchaseProduct->delete();
+
+        return redirect()->back()->with('success', 'Purchase Product deleted successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Purchase Product not found.');
+}
+
+
 }

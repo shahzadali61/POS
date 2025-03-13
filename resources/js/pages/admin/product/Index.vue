@@ -156,6 +156,10 @@ const savePurchaseProductDetail = () => {
                                             class="fa fa-shopping-cart text-emerald-950"
                                             aria-hidden="true"></i></a-button>
                                 </a-tooltip>
+                                <a-tooltip placement="top">
+                                    <template #title>Purchase Product List</template>
+                                    <Link :href="route('user.related.purchase.product.list',record.slug)" class="text-blue-500 hover:underline"><i class="fa fa-list text-slate-800" aria-hidden="true"></i></Link>
+                                </a-tooltip>
                             </template>
 
                         </template>
