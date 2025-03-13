@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { Head, Link , useForm} from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Modal } from 'ant-design-vue';
 import dayjs from "dayjs";
 import { ref } from 'vue';
@@ -38,8 +38,8 @@ const deleteProduct = (id: number) => {
                 onSuccess: () => {
                 },
                 onFinish: () => {
-           isLoading.value = false;
-        }
+                    isLoading.value = false;
+                }
             });
         },
     });
@@ -52,23 +52,25 @@ const editForm = useForm({
     name: '',
     description: '',
 });
-const purchaseForm = useForm({
+const purchaseDetailForm = useForm({
     id: null,
     purchase_price: '',
+    sale_price: '',
     qty: '',
-    remaining_qty: '',
+    product_id: null,
     description: '',
 });
-const openEditModal =(product:any)=>{
+const openEditModal = (product: any) => {
     editForm.id = product.id;
     editForm.name = product.name;
     editForm.description = product.description;
     isEditModalVisible.value = true;
 }
-const openPurchaseDetailModal =(product:any)=>{
-    purchaseForm.id = product.id;
+const openPurchaseDetailModal = (product: any) => {
+    purchaseDetailForm.id = product.id;
     isPurchaseModalVisible.value = true;
     selectedProductName.value = product.name;
+    purchaseDetailForm.product_id = product.id;
 }
 // Update brand
 const updateProduct = () => {
@@ -82,11 +84,27 @@ const updateProduct = () => {
         }
     });
 };
+const savePurchaseProductDetail = () => {
+    isLoading.value = true;
+    purchaseDetailForm.post(route('user.purchase.product.detail.store'), {
+        onSuccess: () => {
+            purchaseDetailForm.reset();
+            isPurchaseModalVisible.value = false;
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
+};
 
 </script>
 
 <template>
+    <div v-if="isLoading" class="loading-overlay">
+        <a-spin size="large" />
+    </div>
     <AdminLayout>
+
         <Head title="Product List" />
         <a-row>
             <a-col :span="24">
@@ -95,9 +113,9 @@ const updateProduct = () => {
                         <h2 class="text-lg font-semibold">Product List </h2>
 
                         <div>
-                        <Link :href="route('user.product-log')">
+                            <Link :href="route('user.product-log')">
                             <a-button class="mx-2" type="default">Product Logs</a-button>
-                        </Link>
+                            </Link>
                         </div>
                     </div>
 
@@ -108,30 +126,35 @@ const updateProduct = () => {
                                 {{ index + 1 }}
                             </template>
                             <template v-if="column.dataIndex === 'name'">
-                                {{ record.name}}
+                                {{ record.name }}
                             </template>
                             <template v-if="column.dataIndex === 'description'">
-                                {{ record.description ? record.description : 'N/A'}}
+                                {{ record.description ? record.description : 'N/A' }}
                             </template>
                             <template v-if="column.dataIndex === 'brand'">
-                                {{ record.brand.slug}}
+                                {{ record.brand.slug }}
                             </template>
 
                             <template v-else-if="column.dataIndex === 'created_at'">
                                 {{ formatDate(record.created_at) }}
                             </template>
                             <template v-else-if="column.dataIndex === 'action'">
-                            <a-tooltip placement="top">
+                                <a-tooltip placement="top">
                                     <template #title>Delete</template>
-                                    <a-button type="link"  @click="deleteProduct(record.id)"><i class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="deleteProduct(record.id)"><i
+                                            class="fa fa-trash text-red-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Edit</template>
-                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openEditModal(record)"><i
+                                            class="fa fa-pencil-square-o text-s text-green-500"
+                                            aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Add Purchase Details</template>
-                                    <a-button type="link" @click="openPurchaseDetailModal(record)"><i class="fa fa-shopping-cart text-emerald-950" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openPurchaseDetailModal(record)"><i
+                                            class="fa fa-shopping-cart text-emerald-950"
+                                            aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                             </template>
 
@@ -140,8 +163,8 @@ const updateProduct = () => {
                 </div>
             </a-col>
         </a-row>
-          <!-- Edit Product Modal -->
-          <a-modal v-model:visible="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
+        <!-- Edit Product Modal -->
+        <a-modal v-model:visible="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
             :footer="null">
             <form @submit.prevent="updateProduct()">
                 <div class="mb-4">
@@ -162,26 +185,54 @@ const updateProduct = () => {
             </form>
 
         </a-modal>
-          <!-- Edit Purchase Product Detail Modal -->
-          <a-modal  width="1000px" v-model:visible="isPurchaseModalVisible" title="Product Purchase Detail" @cancel="isPurchaseModalVisible = false"
-            :footer="null">
+        <!-- Edit Purchase Product Detail Modal -->
+        <a-modal  v-model:visible="isPurchaseModalVisible" title="Product Purchase Detail"
+            @cancel="isPurchaseModalVisible = false" :footer="null">
             <h4 class="text-md">Product - ({{ selectedProductName }})</h4>
-            <form @submit.prevent="updateProduct()">
-            <a-row>
+            <form @submit.prevent="savePurchaseProductDetail()">
+                <a-input hidden v-model:value="purchaseDetailForm.product_id" class="mt-2 w-full"
+                    placeholder="Enter Name" />
+                <a-row>
+                    <a-col :span="24">
+                        <div class="mb-1">
+                            <label class="block">Purchase Price</label>
+                            <a-input  type="number" v-model:value="purchaseDetailForm.purchase_price" class="mt-2 w-full"
+                                placeholder="Enter Purchase Price" />
+                            <div v-if="purchaseDetailForm.errors.purchase_price" class="text-red-500">{{
+                                purchaseDetailForm.errors.purchase_price }}</div>
+                        </div>
 
+                    </a-col>
+                    <a-col :span="24">
+                        <div class="mb-1">
+                            <label class="block">Sale Price</label>
+                            <a-input  type="number" v-model:value="purchaseDetailForm.sale_price" class="mt-2 w-full"
+                                placeholder="Enter Purchase Price" />
+                            <div v-if="purchaseDetailForm.errors.sale_price" class="text-red-500">{{
+                                purchaseDetailForm.errors.sale_price }}</div>
+                        </div>
+                    </a-col>
+                    <a-col :span="24">
+                        <div class="mb-1">
+                            <label class="block">Stock</label>
+                            <a-input  :min="1"  type="number" v-model:value="purchaseDetailForm.qty" class="mt-2 w-full"
+                                placeholder="Enter Purchase Price" />
+                            <div v-if="purchaseDetailForm.errors.qty" class="text-red-500">{{
+                                purchaseDetailForm.errors.qty }}
+                            </div>
+                        </div>
+                    </a-col>
+                    <a-col :span="24">
+                        <div class="mb-4">
+                            <label class="block">Description( Optional)</label>
+                            <a-textarea v-model:value="purchaseDetailForm.description" class="mt-2 w-full"
+                                placeholder="Description" :auto-size="{ minRows: 2, maxRows: 5 }" />
+                            <div v-if="purchaseDetailForm.errors.description" class="text-red-500">{{
+                                purchaseDetailForm.errors.description }}</div>
+                        </div>
+                    </a-col>
+                </a-row>
 
-            </a-row>
-                <div class="mb-4">
-                    <label class="block">Name</label>
-                    <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
-                    <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
-                </div>
-                <div class="mb-4">
-                    <label class="block">Description</label>
-                    <a-textarea v-model:value="editForm.description" class="mt-2 w-full" placeholder="Description"
-                        :auto-size="{ minRows: 2, maxRows: 5 }" />
-                    <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
-                </div>
                 <div class="text-right">
                     <a-button type="default" @click="isPurchaseModalVisible = false">Cancel</a-button>
                     <a-button type="primary" html-type="submit" class="ml-2">Save</a-button>

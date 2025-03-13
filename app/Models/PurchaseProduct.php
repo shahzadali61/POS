@@ -13,13 +13,15 @@ class PurchaseProduct extends Model
 
     protected $fillable = [
         'purchase_price',
+        'sale_price',
         'qty',
         'remaining_qty',
+        'status',
         'product_id',
         'user_id',
         'description',
     ];
-    public function products(): BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
     }

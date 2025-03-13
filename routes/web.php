@@ -6,6 +6,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PurchaseProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::delete('product/delete/{id}', [ProductController::class, 'destroy'])->name('product.delete');
     Route::put('product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::get('product/logs', [ProductController::class, 'product_log'])->name('product-log');
+    Route::post('purchase-product-detail/store', [PurchaseProductController::class, 'store'])->name('purchase.product.detail.store');
+
 
 });
 

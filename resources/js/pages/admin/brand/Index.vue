@@ -190,7 +190,7 @@ const saveProduct = () => {
             :footer="null">
             <h4 class="text-md">Brand ({{ selectedBrandName }})</h4>
             <form @submit.prevent="saveProduct()">
-                <a-input hidden v-model:value="productForm.brand_id" class="mt-2 w-full" placeholder="Enter Name" />
+                <a-input v-show="false" v-model:value="productForm.brand_id" class="mt-2 w-full" placeholder="Enter Name" />
                 <div class="mb-4">
                     <label class="block">Name</label>
                     <a-input v-model:value="productForm.name" class="mt-2 w-full" placeholder="Enter Name" />
