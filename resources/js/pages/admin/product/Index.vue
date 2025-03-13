@@ -56,7 +56,7 @@ const purchaseDetailForm = useForm({
     id: null,
     purchase_price: '',
     sale_price: '',
-    qty: '',
+    stock: '',
     product_id: null,
     description: '',
 });
@@ -219,10 +219,10 @@ const savePurchaseProductDetail = () => {
                     <a-col :span="24">
                         <div class="mb-1">
                             <label class="block">Stock</label>
-                            <a-input  :min="1"  type="number" v-model:value="purchaseDetailForm.qty" class="mt-2 w-full"
+                            <a-input  :min="1"  type="number" v-model:value="purchaseDetailForm.stock" class="mt-2 w-full"
                                 placeholder="Enter Purchase Price" />
-                            <div v-if="purchaseDetailForm.errors.qty" class="text-red-500">{{
-                                purchaseDetailForm.errors.qty }}
+                            <div v-if="purchaseDetailForm.errors.stock" class="text-red-500">{{
+                                purchaseDetailForm.errors.stock }}
                             </div>
                         </div>
                     </a-col>

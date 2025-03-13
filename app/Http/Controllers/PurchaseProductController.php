@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class PurchaseProductController extends Controller
                 'numeric',
                 'gte:purchase_price' // Ensures sale_price >= purchase_price
             ],
-            'qty' => ['required', 'integer', 'min:1'],
+            'stock' => ['required', 'integer', 'min:1'],
             'product_id' => ['required', 'exists:products,id'],
             'description' => 'nullable|string',
         ]);
@@ -34,8 +35,8 @@ class PurchaseProductController extends Controller
                 'user_id' => Auth::id(),
                 'purchase_price' => $request->purchase_price,
                 'sale_price' => $request->sale_price,
-                'qty' => $request->qty,
-                'remaining_qty' => $request->qty,
+                'stock' => $request->stock,
+                'remaining_stock' => $request->stock,
                 'product_id' => $request->product_id,
                 'description' => $request->description,
             ]);
@@ -43,7 +44,7 @@ class PurchaseProductController extends Controller
             $note = 'Product "' . $purchaseProduct->product->name . '" purchased by ' . ($user->name ?? 'Unknown User') . '. ' .
             'Purchase Price: ' . $purchaseProduct->purchase_price . ', ' .
             'Sale Price: ' . $purchaseProduct->sale_price . ', ' .
-            'Stock: ' . $purchaseProduct->qty . '.';
+            'Stock: ' . $purchaseProduct->stock . '.';
             PurchaseProductLog::create([
                 'note' => $note,
                 'product_name' => $purchaseProduct->product->name,
@@ -99,6 +100,59 @@ public function destroy($id)
 
     return redirect()->back()->with('error', 'Purchase Product not found.');
 }
+
+
+public function update(Request $request, $id)
+    {
+        $request->validate([
+            'purchase_price' => ['required', 'numeric'],
+                    'sale_price' => [
+                'required',
+                'numeric',
+                'gte:purchase_price' // Ensures sale_price >= purchase_price
+            ],
+            'stock' => ['required', 'integer', 'min:1'],
+            'description' => 'nullable|string',
+        ]);
+        $purchaseProduct = PurchaseProduct::find($id);
+
+        if (!$purchaseProduct) {
+            return redirect()->back()->with('error', 'Purchase Product not found.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $oldSalePrice = $purchaseProduct->sale_price;
+
+            $purchaseProduct->update([
+                'purchase_price' => $request->purchase_price,
+                'sale_price' => $request->sale_price,
+                'stock' => $request->stock,
+                'description' => $request->description,
+            ]);
+
+            $user = Auth::user();
+            $oldStock = $purchaseProduct->stock;
+            $note = 'Purchase Product updated by ' . ($user->name ?? 'Unknown User') . '. ' .
+            'Old Sale Price: ' . $oldSalePrice . ', New Sale Price: ' . $purchaseProduct->sale_price . '. ' .
+            'Old Stock: ' . $oldStock . ', New Stock: ' . $purchaseProduct->stock;
+
+            PurchaseProductLog::create([
+                'note' => $note,
+                'product_name' => $purchaseProduct->product->name,
+                'purchase_id' => $purchaseProduct->id,
+                'user_id' => Auth::id(),
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Purchase Product updated successfully.');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Purchase Product update failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
+        }
+    }
 
 
 }

@@ -49,21 +49,25 @@ const deletePurchaseProduct = (id: number) => {
     });
 };
 const isEditModalVisible = ref(false);
-const editForm = useForm({
+const purchaseProductEditForm  = useForm({
     id: null,
-    name: '',
+    purchase_price: '',
+    sale_price: '',
+    stock: '',
     description: '',
 });
-const openEditModal =(product:any)=>{
-    editForm.id = product.id;
-    editForm.name = product.name;
-    editForm.description = product.description;
+const showEditPurchaseModal  =(purchaseProduct:any)=>{
+    purchaseProductEditForm.id = purchaseProduct.id;
+    purchaseProductEditForm.purchase_price = purchaseProduct.purchase_price;
+    purchaseProductEditForm.sale_price = purchaseProduct.sale_price;
+    purchaseProductEditForm.description = purchaseProduct.description;
+    purchaseProductEditForm.stock = purchaseProduct.stock;
     isEditModalVisible.value = true;
 }
 // Update brand
-const updateProduct = () => {
+const updatePurchaseDetails = () => {
     isLoading.value = true;
-    editForm.put(route('user.product.update', editForm.id), {
+    purchaseProductEditForm .put(route('user.purchase.product.update', purchaseProductEditForm .id), {
         onSuccess: () => {
             isEditModalVisible.value = false;
         },
@@ -75,8 +79,11 @@ const updateProduct = () => {
 
 </script>
 <template>
+      <div v-if="isLoading" class="loading-overlay" >
+        <a-spin size="large" />
+    </div>
     <AdminLayout>
-        <Head title="Product List" />
+        <Head title="Purchase Product List" />
         <a-row>
             <a-col :span="24">
                 <div class="bg-white rounded-lg p-4 shadow-md">
@@ -108,7 +115,7 @@ const updateProduct = () => {
                                 {{ record.sale_price}}
                             </template>
                             <template v-if="column.dataIndex === 'stock'">
-                                {{ record.remaining_qty}}
+                                {{ record.remaining_stock}}
                             </template>
 
                             <template v-else-if="column.dataIndex === 'created_at'">
@@ -121,7 +128,7 @@ const updateProduct = () => {
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Edit</template>
-                                    <a-button type="link" @click="openEditModal(record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="showEditPurchaseModal (record)"><i class="fa fa-pencil-square-o text-s text-green-500" aria-hidden="true"></i></a-button>
                                 </a-tooltip>
                             </template>
 
@@ -131,26 +138,36 @@ const updateProduct = () => {
             </a-col>
         </a-row>
           <!-- Edit Product Modal -->
-          <a-modal v-model:visible="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
+          <a-modal v-model:visible="isEditModalVisible" title="Edit Purchase Details" @cancel="isEditModalVisible = false"
             :footer="null">
-            <form @submit.prevent="updateProduct()">
+            <form @submit.prevent="updatePurchaseDetails()">
                 <div class="mb-4">
-                    <label class="block">Name</label>
-                    <a-input v-model:value="editForm.name" class="mt-2 w-full" placeholder="Enter Name" />
-                    <div v-if="editForm.errors.name" class="text-red-500">{{ editForm.errors.name }}</div>
+                    <label class="block">Purchase price</label>
+                    <a-input type="number" v-model:value="purchaseProductEditForm .purchase_price" class="mt-2 w-full"/>
+                    <div v-if="purchaseProductEditForm .errors.purchase_price" class="text-red-500">{{ purchaseProductEditForm .errors.purchase_price }}</div>
                 </div>
                 <div class="mb-4">
+                    <label class="block">Sale price</label>
+                    <a-input type="number" v-model:value="purchaseProductEditForm .sale_price" class="mt-2 w-full" />
+                    <div v-if="purchaseProductEditForm .errors.sale_price" class="text-red-500">{{ purchaseProductEditForm .errors.sale_price }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Sale price</label>
+                    <a-input type="number" v-model:value="purchaseProductEditForm .stock" class="mt-2 w-full" />
+                    <div v-if="purchaseProductEditForm .errors.stock" class="text-red-500">{{ purchaseProductEditForm .errors.stock }}</div>
+                </div>
+
+                <div class="mb-4">
                     <label class="block">Description</label>
-                    <a-textarea v-model:value="editForm.description" class="mt-2 w-full" placeholder="Description"
+                    <a-textarea v-model:value="purchaseProductEditForm .description" class="mt-2 w-full" placeholder="Description"
                         :auto-size="{ minRows: 2, maxRows: 5 }" />
-                    <div v-if="editForm.errors.description" class="text-red-500">{{ editForm.errors.description }}</div>
+                    <div v-if="purchaseProductEditForm .errors.description" class="text-red-500">{{ purchaseProductEditForm .errors.description }}</div>
                 </div>
                 <div class="text-right">
                     <a-button type="default" @click="isEditModalVisible = false">Cancel</a-button>
                     <a-button type="primary" html-type="submit" class="ml-2">Update</a-button>
                 </div>
             </form>
-
         </a-modal>
     </AdminLayout>
 </template>

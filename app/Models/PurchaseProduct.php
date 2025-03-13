@@ -14,8 +14,8 @@ class PurchaseProduct extends Model
     protected $fillable = [
         'purchase_price',
         'sale_price',
-        'qty',
-        'remaining_qty',
+        'stock',
+        'remaining_stock',
         'status',
         'product_id',
         'user_id',

@@ -38,6 +38,7 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::post('purchase-product-detail/store', [PurchaseProductController::class, 'store'])->name('purchase.product.detail.store');
     Route::get('related-purchase-products/list/{slug}', [PurchaseProductController::class, 'relatedPurchaseProductList'])->name('related.purchase.product.list');
     Route::delete('purchase-product-delete/{id}', [PurchaseProductController::class, 'destroy'])->name('purchase.product.delete');
+    Route::put('purchase-product-update/{id}', [PurchaseProductController::class, 'update'])->name('purchase.product.update');
 
 
 });

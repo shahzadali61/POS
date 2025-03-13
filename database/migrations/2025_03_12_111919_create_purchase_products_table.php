@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->decimal('purchase_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
-            $table->integer('qty');
-            $table->integer('remaining_qty');
+            $table->integer('stock');
+            $table->integer('remaining_stock');
             $table->integer('status')->default(1);
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
