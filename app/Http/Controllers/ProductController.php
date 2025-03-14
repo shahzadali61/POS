@@ -100,6 +100,7 @@ class ProductController extends Controller
                 'user_id' => Auth::id(),
             ]);
             $product->delete();
+            $product->purchaseProducts()->delete();
             return redirect()->back()->with('success', 'Product deleted successfully.');
         }
         return redirect()->back()->with('error', 'Product not found.');

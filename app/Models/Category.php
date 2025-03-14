@@ -27,7 +27,16 @@ class Category extends Model
 
     static::deleting(function ($category) {
         foreach ($category->brands as $brand) {
-            $brand->delete(); // Yeh brand delete karega aur brand ke deleting event se products bhi delete ho jayenge
+            foreach ($brand->products as $product) {
+                // Delete all purchase products related to this product
+                $product->purchaseProducts()->delete();
+
+                // Delete the product
+                $product->delete();
+            }
+
+            // Delete the brand after its products are deleted
+            $brand->delete();
         }
     });
 }
