@@ -40,6 +40,12 @@ import { UserOutlined, DatabaseOutlined } from '@ant-design/icons-vue';
         </Link>
       </a-menu-item>
       <a-menu-item key="6">
+        <Link :href="route('user.order.create')">
+          <UserOutlined />
+          <span>Orders</span>
+        </Link>
+      </a-menu-item>
+      <a-menu-item key="7">
         <Link :href="route('profile.edit')">
           <UserOutlined />
           <span>Profile</span>

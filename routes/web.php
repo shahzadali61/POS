@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PurchaseProductController;
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::put('purchase-product-update/{id}', [PurchaseProductController::class, 'update'])->name('purchase.product.update');
     Route::get('purchase/products/list', [PurchaseProductController::class, 'purchaseProductList'])->name('purchase.product.list');
     Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
+    Route::get('order/create', [OrderController::class, 'orderCreate'])->name('order.create');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
