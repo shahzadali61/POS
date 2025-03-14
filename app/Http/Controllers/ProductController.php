@@ -155,9 +155,10 @@ class ProductController extends Controller
     }
     public function product_log()
     {
-        $productLogs = ProductLog::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        $productLogs = ProductLog::with('user')->where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(10);
         return Inertia::render('admin/product/ProductLog', [
             'productLog' => $productLogs,
         ]);
     }
+
 }

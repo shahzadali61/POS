@@ -154,5 +154,25 @@ public function update(Request $request, $id)
         }
     }
 
+    public function purchaseProductList()
+    {
+        $purchaseProducts = PurchaseProduct::where('user_id', Auth::id())
+        ->with( 'product')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
+        return Inertia::render('admin/product/PurchaseProductList', compact('purchaseProducts'));
+    }
+
+    public function purchaseProductLog()
+    {
+        $purchaseLogs = PurchaseProductLog::with('user')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return Inertia::render('admin/product/PurchaseProductLog', [
+            'purchaseLogs' => $purchaseLogs,
+        ]);
+}
 }

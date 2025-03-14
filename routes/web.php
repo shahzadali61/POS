@@ -39,8 +39,8 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::get('related-purchase-products/list/{slug}', [PurchaseProductController::class, 'relatedPurchaseProductList'])->name('related.purchase.product.list');
     Route::delete('purchase-product-delete/{id}', [PurchaseProductController::class, 'destroy'])->name('purchase.product.delete');
     Route::put('purchase-product-update/{id}', [PurchaseProductController::class, 'update'])->name('purchase.product.update');
-
-
+    Route::get('purchase/products/list', [PurchaseProductController::class, 'purchaseProductList'])->name('purchase.product.list');
+    Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

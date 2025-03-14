@@ -85,7 +85,7 @@ class CategoryController extends Controller
             $category->brands()->delete();
             return redirect()->back()->with('success', 'category deleted successfully.');
         }
-        
+
         return redirect()->back()->with('error', 'category not found.');
     }
 
@@ -140,9 +140,9 @@ class CategoryController extends Controller
 
     public function category_log(){
 
-        $CategoryLog = CategoryLog::where('user_id', Auth::id())
-        ->with( 'user') //Eager load relationships
-        ->orderBy('created_at', 'desc')
+        $CategoryLog = CategoryLog::with('user')
+        ->where('user_id', Auth::id())
+        ->latest()
         ->paginate(10);
 
         return Inertia::render('admin/category/CategoryLog', [

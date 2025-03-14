@@ -160,9 +160,9 @@ class BrandController extends Controller
     }
     public function brand_log(){
 
-        $brandLog = BrandLog::where('user_id', Auth::id())
-        ->with( 'user') //Eager load relationships
-        ->orderBy('created_at', 'desc')
+        $brandLog = BrandLog::with('user') // Eager load user relation first
+        ->where('user_id', Auth::id()) // Filter for logged-in user
+        ->latest() // Same as orderBy('created_at', 'desc')
         ->paginate(10);
 
         return Inertia::render('admin/brand/BrandLog', [
