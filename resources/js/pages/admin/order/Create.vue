@@ -140,5 +140,66 @@ watch([quantity, finalPrice], () => {
                 </div>
             </a-col>
         </a-row>
+        <a-row class="mt-4 ">
+            <a-col :lg="12">
+                <div class="bg-white rounded-lg p-4 shadow-md">
+                   <table class="table-auto w-full">
+                    <thead>
+                        <tr class="text-left">
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>QTY</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="py-2">
+                            <td class="py-2">Product 1</td>
+                            <td class="py-2">100</td>
+                            <td class="py-2">2</td>
+                            <td class="py-2">200</td>
+                            <td class="py-2">
+                                <a-button type="primary" danger>Delete</a-button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                   </table>
+                </div>
+            </a-col>
+            <a-col :lg="12 ">
+
+                <div class="bg-white rounded-lg p-4 shadow-md ml-2">
+                 <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title
+                        ">Order Summary</h3>
+                    </div>
+               <a-row>
+                     <a-col :lg="12">
+                        <div class="mb-4 mx-1">
+                            <label class="block">Name</label>
+                            <a-input v-model:value="tt" class="mt-2 w-full" placeholder="User Name" />
+                            <div class="text-red-500"></div>
+                        </div>
+
+                     </a-col>
+                     <a-col :lg="12">
+                        <div class="mb-4 mx-1">
+                            <label class="block">Phone No</label>
+                            <a-input type="number" v-model:value="tt" class="mt-2 w-full" placeholder="Phone Number" />
+                            <div class="text-red-500"></div>
+                        </div>
+
+                     </a-col>
+                     a
+
+
+               </a-row>
+                 </div>
+                </div>
+            </a-col>
+        </a-row>
     </AdminLayout>
 </template>
