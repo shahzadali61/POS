@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
-use App\Models\PurchaseProduct;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
