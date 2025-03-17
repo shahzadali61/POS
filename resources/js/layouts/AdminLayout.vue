@@ -15,7 +15,7 @@ const collapsed = ref(false);
     <Head title="Dashboard" />
     <a-layout>
         <!-- Sidebar Component -->
-        <Sidebar v-model:collapsed="collapsed" />
+        <Sidebar :collapsed="collapsed" />
 
         <!-- Main Layout -->
         <a-layout :style="{ height: '100vh' }">

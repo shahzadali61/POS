@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\PurchaseProduct;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function orderCreate(){
+    public function orderCreate()
+{
+    $products = Product::with('purchaseProducts')
+        ->where('user_id', Auth::id())
+        ->get();
 
-        return Inertia::render('admin/order/Create');
-    }
+    return Inertia::render('admin/order/Create', [
+        'products' => $products
+    ]);
+}
 }
