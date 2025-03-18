@@ -3,54 +3,68 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch, computed } from 'vue';
 import { message } from 'ant-design-vue';
+
+// ✅ State Management
 const isLoading = ref(false);
 const errors = ref<Record<string, string>>({});
-
 const customerName = ref('');
 const phoneNumber = ref('');
 const paymentMethod = ref('');
 const status = ref('completed');
-
-const props = defineProps<{
-    products: {
-        id: number;
-        name: string;
-        purchase_products: {
-            id: number;
-            sale_price: number;
-            stock: number;
-            remaining_stock: number;
-            description: string | null;
-        }[];
-    }[];
-}>();
-
-const selectedProductId = ref<number | null>(props.products.length > 0 ? props.products[0].id : null);
-const selectedPurchaseProduct = ref<number | null>(null);
-const quantity = ref<number>(1);
-const total = ref<number>(0);
-const finalPrice = ref<number>(0);
 const discount = ref<number>(0);
-const orderItems = ref<{ id: number; name: string; price: number; quantity: number; total: number }[]>([]);
+const quantity = ref<number>(1);
+const orderItems = ref<OrderItem[]>([]);
 
+// ✅ Props & Type Definition
+interface PurchaseProduct {
+    id: number;
+    sale_price: number;
+    stock: number;
+    remaining_stock: number;
+    description: string | null;
+}
+
+interface Product {
+    id: number;
+    name: string;
+    purchase_products: PurchaseProduct[];
+}
+
+interface OrderItem {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    total: number;
+}
+
+const props = defineProps<{ products: Product[] }>();
+
+// ✅ Selected Product & Purchase Product Management
+const selectedProductId = ref<number | null>(props.products[0]?.id ?? null);
+const selectedPurchaseProduct = ref<number | null>(null);
+
+// ✅ Computed Properties
 const selectedProduct = computed(() => props.products.find(p => p.id === selectedProductId.value));
-const purchaseProducts = computed(() => selectedProduct.value?.purchase_products || []);
+const purchaseProducts = computed(() => selectedProduct.value?.purchase_products ?? []);
 const selectedPurchaseProductData = computed(() => purchaseProducts.value.find(pp => pp.id === selectedPurchaseProduct.value));
 
+const finalPrice = computed(() => selectedPurchaseProductData.value?.sale_price ?? 0);
+const total = computed(() => finalPrice.value * quantity.value);
+const totalAmount = computed(() => orderItems.value.reduce((sum, item) => sum + item.total, 0));
+const subTotal = computed(() => Math.max(totalAmount.value - discount.value, 0));
+
+// ✅ Watchers
 watch(selectedProductId, () => {
-    selectedPurchaseProduct.value = purchaseProducts.value.length > 0 ? purchaseProducts.value[0].id : null;
+    selectedPurchaseProduct.value = purchaseProducts.value[0]?.id ?? null;
     quantity.value = 1;
 });
 
-watch(selectedPurchaseProduct, () => {
-    finalPrice.value = selectedPurchaseProductData.value?.sale_price || 0;
-    total.value = finalPrice.value * quantity.value;
+watch(discount, () => {
+    if (discount.value > totalAmount.value) discount.value = totalAmount.value;
 });
 
-watch([quantity, finalPrice], () => {
-    total.value = finalPrice.value * quantity.value;
-});
-
+// ✅ Add Product to Order
 const addToOrder = () => {
     if (!selectedProduct.value || !selectedPurchaseProductData.value) return;
 
@@ -64,65 +78,61 @@ const addToOrder = () => {
             name: selectedProduct.value.name,
             price: finalPrice.value,
             quantity: quantity.value,
-            total: total.value
+            total: total.value,
         });
     }
 
+    // Reset selections
     selectedProductId.value = props.products[0]?.id ?? null;
     selectedPurchaseProduct.value = null;
     quantity.value = 1;
 };
 
+// ✅ Remove Product from Order
 const removeItem = (id: number) => {
     orderItems.value = orderItems.value.filter(item => item.id !== id);
 };
 
-const totalAmount = computed(() => orderItems.value.reduce((sum, item) => sum + item.total, 0));
-const subTotal = computed(() => totalAmount.value - discount.value);
-
-watch(discount, () => {
-    if (discount.value > totalAmount.value) discount.value = totalAmount.value;
-});
-
+// ✅ Submit Order
 const submitOrder = () => {
     if (orderItems.value.length === 0) {
         message.error('Please add at least one product to the order.');
         return;
     }
 
+    isLoading.value = true;
+
     const payload = {
-    name: customerName.value,
-    phone_number: phoneNumber.value,
-    total_price: totalAmount.value,
-    discount: discount.value,
-    subtotal_price: subTotal.value,
-    status: status.value,
-    payment_method: paymentMethod.value,
-    products: orderItems.value.map(item => ({
-        product_id: item.id,
-        purchase_id: item.id,
-        qty: item.quantity,
-        sale_price: item.price,
-        total_price: item.total,
-    })),
-};
+        name: customerName.value,
+        phone_number: phoneNumber.value,
+        total_price: totalAmount.value,
+        discount: discount.value,
+        subtotal_price: subTotal.value,
+        status: status.value,
+        payment_method: paymentMethod.value,
+        products: orderItems.value.map(item => ({
+            product_id: item.id,
+            purchase_id: item.id,
+            qty: item.quantity,
+            sale_price: item.price,
+            total_price: item.total,
+        })),
+    };
 
-
-isLoading.value = true;
-    router.post(route('user.order.store'), payload,  {
+    router.post(route('user.order.store'), payload, {
         onSuccess: () => {
             orderItems.value = [];
             customerName.value = '';
             phoneNumber.value = '';
             discount.value = 0;
         },
-        onError: (errors) => {
-            console.error(errors);
+        onError: (err) => {
+            console.error(err);
             message.error('Failed to create order. Please check inputs.');
         },
         onFinish: () => {
             isLoading.value = false;
-        }
+        },
     });
 };
 </script>
