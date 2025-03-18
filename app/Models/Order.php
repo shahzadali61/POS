@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'name', 'phone_number', 'product_id', 'purchase_id', 'sale_id',
-        'qty', 'sale_price', 'total_amount', 'discount', 'status', 'payment_method'
+        'name', 'phone_number',
+        'total_price',
+         'discount', 'subtotal_price', 'status', 'payment_method'
     ];
     // Auto Calculate Total Amount
     public function setTotalAmountAttribute()
@@ -27,18 +28,10 @@ class Order extends Model
         $this->attributes['total_amount'] = ($salePrice * $qty) - $discountAmount;
     }
 
-    public function product()
+    public function saleProduct()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(SaleProduct::class, 'order_id');
     }
 
-    public function purchase()
-    {
-        return $this->belongsTo(PurchaseProduct::class, 'purchase_id');
-    }
 
-    public function sale()
-    {
-        return $this->belongsTo(SaleProduct::class, 'sale_id');
-    }
 }

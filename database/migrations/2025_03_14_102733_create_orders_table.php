@@ -15,13 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('purchase_id')->constrained('purchase_products')->onDelete('cascade');
-            $table->foreignId('sale_id')->constrained('sale_products')->onDelete('cascade');
-            $table->integer('qty');
-            $table->decimal('sale_price', 10, 2);
-            $table->decimal('total_amount', 10, 2)->nullable(); 
-            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('total_price', 10, 2);
+            $table->decimal('discount', 10, 2);
+            $table->decimal('subtotal_price', 10, 2)->nullable();
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('completed');
             $table->string('payment_method')->nullable();
             $table->timestamps();
