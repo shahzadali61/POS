@@ -201,7 +201,7 @@ const submitOrder = () => {
                     </a-col>
 
                     <!-- Action Button -->
-                    <a-col :xs="24" :sm="11":lg="2">
+                    <a-col :xs="24" :sm="11" :lg="2">
                     <div class="mb-4">
                         <label class="block">Action</label>
                         <a-button type="primary" block @click="addToOrder">ADD</a-button>
