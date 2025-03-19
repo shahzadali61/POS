@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
-            $table->decimal('total_price', 10, 2);
+            $table->decimal('subtotal_price', 10, 2);
             $table->decimal('discount', 10, 2);
-            $table->decimal('subtotal_price', 10, 2)->nullable();
+            $table->decimal('total_price', 10, 2);
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('completed');
             $table->string('payment_method')->nullable();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

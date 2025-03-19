@@ -1,25 +1,33 @@
 <script setup lang="ts">
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch, computed, defineProps } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { UserOutlined, DatabaseOutlined } from '@ant-design/icons-vue';
 
-// Accept collapsed as a prop
+// Props
 defineProps<{ collapsed: boolean }>();
 
-// Define selectedKeys
+// Selected menu key
 const selectedKeys = ref<string[]>([]);
 
-// Watch for route changes and update selectedKeys
+// Define menu items for better maintainability
+const menuItems = [
+  { key: '1', label: 'Dashboard', icon: DatabaseOutlined, route: 'user.dashboard' },
+  { key: '2', label: 'Categories', icon: UserOutlined, route: 'user.categories' },
+  { key: '3', label: 'Brands', icon: UserOutlined, route: 'user.brands' },
+  { key: '4', label: 'Products', icon: UserOutlined, route: 'user.products' },
+  { key: '5', label: 'Purchase Products', icon: UserOutlined, route: 'user.purchase.product.list' },
+  { key: '6', label: 'Get Orders', icon: UserOutlined, route: 'user.order.create' },
+  { key: '7', label: 'Order List', icon: UserOutlined, route: 'user.order.list' },
+  { key: '8', label: 'Profile', icon: UserOutlined, route: 'profile.edit' },
+];
+
+// Compute selected key based on URL
 const page = usePage();
-watch(() => page.url, (newUrl) => {
-  if (newUrl.includes('dashboard')) selectedKeys.value = ['1'];
-  else if (newUrl.includes('categories')) selectedKeys.value = ['2'];
-  else if (newUrl.includes('brands')) selectedKeys.value = ['3'];
-  else if (newUrl.includes('products')) selectedKeys.value = ['4'];
-  else if (newUrl.includes('purchase')) selectedKeys.value = ['5'];
-  else if (newUrl.includes('order')) selectedKeys.value = ['6'];
-  else if (newUrl.includes('profile')) selectedKeys.value = ['7'];
-});
+const currentPath = computed(() => page.url);
+watch(currentPath, (newUrl) => {
+  const matchedItem = menuItems.find(item => newUrl.includes(item.route.split('.').pop() || ''));
+  selectedKeys.value = matchedItem ? [matchedItem.key] : [];
+}, { immediate: true });
 </script>
 
 <template>
@@ -28,46 +36,10 @@ watch(() => page.url, (newUrl) => {
       <h3 v-if="!collapsed">MyApp</h3>
     </div>
     <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-      <a-menu-item key="1">
-        <Link :href="route('user.dashboard')">
-          <DatabaseOutlined />
-          <span>Dashboard</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="2">
-        <Link :href="route('user.categories')">
-          <UserOutlined />
-          <span>Categories</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="3">
-        <Link :href="route('user.brands')">
-          <UserOutlined />
-          <span>Brands</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="4">
-        <Link :href="route('user.products')">
-          <UserOutlined />
-          <span>Products</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="5">
-        <Link :href="route('user.purchase.product.list')">
-          <UserOutlined />
-          <span>Purchase Products</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="6">
-        <Link :href="route('user.order.create')">
-          <UserOutlined />
-          <span>Get Orders</span>
-        </Link>
-      </a-menu-item>
-      <a-menu-item key="7">
-        <Link :href="route('profile.edit')">
-          <UserOutlined />
-          <span>Profile</span>
+      <a-menu-item v-for="item in menuItems" :key="item.key">
+        <Link :href="route(item.route)">
+          <component :is="item.icon" />
+          <span>{{ item.label }}</span>
         </Link>
       </a-menu-item>
     </a-menu>

@@ -52,7 +52,9 @@ const selectedPurchaseProductData = computed(() => purchaseProducts.value.find(p
 const finalPrice = computed(() => selectedPurchaseProductData.value?.sale_price ?? 0);
 const total = computed(() => finalPrice.value * quantity.value);
 const totalAmount = computed(() => orderItems.value.reduce((sum, item) => sum + item.total, 0));
-const subTotal = computed(() => Math.max(totalAmount.value - discount.value, 0));
+// ✅ Corrected Discount & Subtotal Calculation
+const discountAmount = computed(() => (discount.value / 100) * totalAmount.value);
+const subTotal = computed(() => totalAmount.value - discountAmount.value);
 
 // ✅ Watchers
 watch(selectedProductId, () => {
@@ -61,7 +63,8 @@ watch(selectedProductId, () => {
 });
 
 watch(discount, () => {
-    if (discount.value > totalAmount.value) discount.value = totalAmount.value;
+    if (discount.value < 0) discount.value = 0;
+    if (discount.value > 100) discount.value = 100;
 });
 
 // ✅ Add Product to Order
@@ -261,21 +264,22 @@ const submitOrder = () => {
                         <a-col :sm="12" :xs="24" >
                             <div class="mb-4 mx-1">
                                 <label class="block">Phone Number</label>
-                                <a-input v-model:value="phoneNumber" class="mt-2 w-full" placeholder="Phone Number" />
+                                <a-input type="number" v-model:value="phoneNumber" class="mt-2 w-full" placeholder="Phone Number" />
                                 <div v-if="errors.phone_number" class="text-red-500">{{ errors.phone_number }}</div> <!-- ✅ Directly display the error -->
                             </div>
 
                         </a-col>
                         <a-col :xs="24">
 
-                        <div>
-                            <h4 class="mb-2">Total: {{ totalAmount }}</h4>
-                            <div class="flex items-center mb-2">
-                                <h4>Disc:</h4>
-                                <a-input min="0" type="number" v-model:value="discount" class="w-52 ml-3" placeholder="DISC" />
-                            </div>
-                            <h4 class="mb-2">Sub Total: {{ subTotal }}</h4>
-                        </div>
+                                            <div>
+                    <h4 class="mb-2">Subtotal: {{ totalAmount }}</h4>
+                    <div class="flex items-center mb-2">
+                        <h4>Discount ({{ discount }}%):</h4>
+                        <a-input min="0" max="100" type="number" v-model:value="discount" class="w-52 ml-3" placeholder="Discount (%)" />
+                    </div>
+                    <h4 class="mb-2">Total: {{ subTotal }}</h4>
+                </div>
+
                             <a-button type="primary" class="w-full" @click="submitOrder">Generate Order</a-button>
                         </a-col>
                         </a-row>

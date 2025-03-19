@@ -186,7 +186,7 @@ const saveProduct = () => {
             </form>
         </a-modal>
         <!-- Product Modal  -->
-        <a-modal v-model:visible="isproductModalVisible" title="Add Brand  " @cancel="isproductModalVisible = false"
+        <a-modal v-model:visible="isproductModalVisible" title="Add Product Name  " @cancel="isproductModalVisible = false"
             :footer="null">
             <h4 class="text-md">Brand ({{ selectedBrandName }})</h4>
             <form @submit.prevent="saveProduct()">

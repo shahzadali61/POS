@@ -60,21 +60,26 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
-            // Calculate total price and subtotal
-            $totalPrice = collect($request->products)->sum(fn($product) => $product['sale_price'] * $product['qty']);
-            $discountAmount = ($request->discount / 100) * $totalPrice;
-            $subTotal = $totalPrice - $discountAmount;
+                        // Calculate subtotal
+                $subTotal = collect($request->products)->sum(fn($product) => $product['sale_price'] * $product['qty']);
 
-            // Create the order
-            $order = Order::create([
-                'name' => $request->name,
-                'phone_number' => $request->phone_number,
-                'total_price' => $totalPrice,
-                'discount' => $request->discount,
-                'subtotal_price' => $subTotal,
-                'payment_method' => $request->payment_method,
-                'user_id' => Auth::id(),
-            ]);
+                // Calculate discount amount
+                $discountAmount = ($request->discount / 100) * $subTotal;
+
+                // Calculate total price after discount
+                $totalPrice = $subTotal - $discountAmount;
+
+                // Create the order
+                $order = Order::create([
+                    'name' => $request->name,
+                    'phone_number' => $request->phone_number,
+                    'total_price' => $totalPrice,
+                    'discount' => $request->discount,
+                    'subtotal_price' => $subTotal,
+                    'payment_method' => $request->payment_method,
+                    'user_id' => Auth::id(),
+                ]);
+
 
             // Process each ordered product
             foreach ($request->products as $product) {
@@ -109,4 +114,14 @@ class OrderController extends Controller
         }
     }
 
+    public function orderList()
+{
+    $orders = Order::with('saleProduct.product') // Eager load products
+        ->where('user_id', Auth::id())
+        ->latest()
+        ->paginate(10);
+        
+
+    return Inertia::render('admin/order/OrderList', compact('orders'));
+}
 }

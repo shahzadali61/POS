@@ -12,25 +12,16 @@ class Order extends Model
     protected $fillable = [
         'name', 'phone_number',
         'total_price',
-         'discount', 'subtotal_price', 'status', 'payment_method'
+         'discount', 'subtotal_price', 'status', 'payment_method', 'user_id'
     ];
-    // Auto Calculate Total Amount
-    public function setTotalAmountAttribute()
-    {
-        $salePrice = $this->attributes['sale_price'];
-        $qty = $this->attributes['qty'];
-        $discountPercentage = $this->attributes['discount']; // In %
-
-        // Discount Calculation
-        $discountAmount = ($salePrice * $qty) * ($discountPercentage / 100);
-
-        // Final Total Price after Discount
-        $this->attributes['total_amount'] = ($salePrice * $qty) - $discountAmount;
-    }
 
     public function saleProduct()
     {
         return $this->hasMany(SaleProduct::class, 'order_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 

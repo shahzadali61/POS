@@ -43,6 +43,7 @@ Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function (
     Route::get('purchase/products/list', [PurchaseProductController::class, 'purchaseProductList'])->name('purchase.product.list');
     Route::get('purchase/product/logs', [PurchaseProductController::class, 'purchaseProductLog'])->name('purchase.product.log');
     Route::get('order/create', [OrderController::class, 'orderCreate'])->name('order.create');
+    Route::get('order/list', [OrderController::class, 'orderList'])->name('order.list');
     Route::post('order/store', [OrderController::class, 'store'])->name('order.store');
 });
 
