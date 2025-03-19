@@ -7,6 +7,7 @@ defineProps({
     brands: Number,
     product: Number,
     category: Number,
+    totalRevenue: Number,
 });
 
 </script>
@@ -16,6 +17,14 @@ defineProps({
         <Head title="Dashboard" />
         <div style="background-color: #ececec; padding: 20px">
             <a-row :gutter="10">
+                <a-col :span="6">
+                    <DashboardCard
+                        title="Total Revenue"
+                        :value="totalRevenue"
+                        :icon="FileProtectOutlined"
+                        bgColor="bg-green-800"
+                    />
+                </a-col>
                 <a-col :span="6">
                     <DashboardCard
                         title="Brands"
