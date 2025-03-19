@@ -3,6 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import dayjs from "dayjs";
 import { ref } from "vue";
+import { FundViewOutlined } from '@ant-design/icons-vue';
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
@@ -25,7 +26,6 @@ const isOrderViewModalVisible = ref(false);
 const selectedOrder = ref<any>(null);
 
 const openOrderView = (order: any) => {
-    console.log("Order Data:", order);
     selectedOrder.value = order;
     isOrderViewModalVisible.value = true;
 };
@@ -71,9 +71,7 @@ const openOrderView = (order: any) => {
                             <template v-else-if="column.dataIndex === 'action'">
                                 <a-tooltip placement="top">
                                     <template #title>Order View</template>
-                                    <a-button type="link" @click="openOrderView(record)"><i
-                                            class="fa fa-pencil-square-o text-s text-green-500"
-                                            aria-hidden="true"></i></a-button>
+                                    <a-button type="link" @click="openOrderView(record)"><FundViewOutlined /></a-button>
                                 </a-tooltip>
                             </template>
                         </template>
@@ -83,11 +81,13 @@ const openOrderView = (order: any) => {
             </a-col>
         </a-row>
         <!-- Edit Product Modal -->
-        <a-modal v-model:visible="isOrderViewModalVisible" title="Order Preview"
+        <a-modal width="700px" v-model:visible="isOrderViewModalVisible" title="Order Preview"
             @cancel="isOrderViewModalVisible = false" :footer="null">
             <a-row>
                 <a-col :xs="24">
                     <div class="mb-2 overflow-x-auto">
+                    <div class="border-gray-500 border  my-4">
+                    </div>
                         <table class="table-auto w-full">
                             <thead>
                                 <tr class="text-left">
@@ -112,7 +112,8 @@ const openOrderView = (order: any) => {
                     </div>
                 </a-col>
                 <a-col  :xs="24">
-                    <hr>
+                    <div class="border-gray-500 border  my-4">
+                    </div>
                     <div class="my-3">
                         <h4 class="mb-2">Subtotal: {{ selectedOrder?.subtotal_price }}</h4>
                         <div class="flex items-center mb-2">
