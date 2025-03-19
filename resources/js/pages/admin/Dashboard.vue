@@ -4,11 +4,10 @@ import { Head } from '@inertiajs/vue3';
 import { FileProtectOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
 defineProps({
-    brands: Object,
-    product: Object,
-    category: Object,
+    brands: Number,
+    product: Number,
+    category: Number,
 });
-
 
 </script>
 
