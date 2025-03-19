@@ -15,9 +15,9 @@ class Order extends Model
          'discount', 'subtotal_price', 'status', 'payment_method', 'user_id'
     ];
 
-    public function saleProduct()
+    public function saleProducts()
     {
-        return $this->hasMany(SaleProduct::class, 'order_id');
+        return $this->hasMany(SaleProduct::class);
     }
     public function user()
     {

@@ -116,11 +116,11 @@ class OrderController extends Controller
 
     public function orderList()
 {
-    $orders = Order::with('saleProduct.product') // Eager load products
+    $orders = Order::with('saleProducts.product') // Eager load products
         ->where('user_id', Auth::id())
         ->latest()
         ->paginate(10);
-        
+
 
     return Inertia::render('admin/order/OrderList', compact('orders'));
 }
