@@ -14,10 +14,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function () {
-    Route::get('user/dashboard', function () {
-        return Inertia::render('admin/Dashboard');
-    })->name('dashboard');
 
+    Route::get('user/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::get('categories', [CategoryController::class, 'index'])->name('categories');
     Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');
     Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');

@@ -3,6 +3,12 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { FileProtectOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
+defineProps({
+    brands: Object,
+    product: Object,
+    category: Object,
+});
+
 
 </script>
 
@@ -13,11 +19,30 @@ import DashboardCard from '@/components/admin/DashboardCard.vue';
             <a-row :gutter="10">
                 <a-col :span="6">
                     <DashboardCard
-                        title="Brand"
-                        :value="33"
+                        title="Brands"
+                        :value="brands"
                         :icon="FileProtectOutlined"
                         bgColor="bg-yellow-800"
                     />
+
+                </a-col>
+                <a-col :span="6">
+                    <DashboardCard
+                        title="Products"
+                        :value="product"
+                        :icon="FileProtectOutlined"
+                        bgColor="bg-yellow-800"
+                    />
+
+                </a-col>
+                <a-col :span="6">
+                    <DashboardCard
+                        title="Categories"
+                        :value="category"
+                        :icon="FileProtectOutlined"
+                        bgColor="bg-yellow-800"
+                    />
+
                 </a-col>
             </a-row>
         </div>
