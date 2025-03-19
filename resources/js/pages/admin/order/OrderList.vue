@@ -123,10 +123,6 @@ const openOrderView = (order: any) => {
                     </div>
                 </a-col>
             </a-row>
-
-            <div class="text-right">
-                <a-button type="default" @click="isOrderViewModalVisible = false">Close</a-button>
-            </div>
         </a-modal>
 
     </AdminLayout>

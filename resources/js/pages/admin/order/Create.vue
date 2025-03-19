@@ -54,7 +54,7 @@ const total = computed(() => finalPrice.value * quantity.value);
 const totalAmount = computed(() => orderItems.value.reduce((sum, item) => sum + item.total, 0));
 // ✅ Corrected Discount & Subtotal Calculation
 const discountAmount = computed(() => (discount.value / 100) * totalAmount.value);
-const subTotal = computed(() => totalAmount.value - discountAmount.value);
+const subtotal = computed(() => totalAmount.value - discountAmount.value);
 
 // ✅ Watchers
 watch(selectedProductId, () => {
@@ -110,7 +110,7 @@ const submitOrder = () => {
         phone_number: phoneNumber.value,
         total_price: totalAmount.value,
         discount: discount.value,
-        subtotal_price: subTotal.value,
+        subtotal_price: subtotal.value,
         status: status.value,
         payment_method: paymentMethod.value,
         products: orderItems.value.map(item => ({
@@ -142,7 +142,6 @@ const submitOrder = () => {
     });
 };
 </script>
-
 
 <template>
     <div v-if="isLoading" class="loading-overlay">
@@ -266,17 +265,15 @@ const submitOrder = () => {
 
                         </a-col>
                         <a-col :xs="24">
-
                             <div>
-                                <h4 class="mb-2">Subtotal: {{ totalAmount }}</h4>
-                                <div class="flex items-center mb-2">
-                                    <h4>Discount ({{ discount }}%):</h4>
-                                    <a-input min="0" max="100" type="number" v-model:value="discount" class="w-52 ml-3"
-                                        placeholder="Discount (%)" />
-                                </div>
-                                <h4 class="mb-2">Total: {{ subTotal }}</h4>
-                            </div>
-
+                        <h4 class="mb-2">Subtotal: {{ subtotal }}</h4>
+                        <div class="flex items-center mb-2">
+                            <h4>Discount ({{ discount }}%):</h4>
+                            <a-input min="0" max="100" type="number" v-model:value="discount" class="w-52 ml-3"
+                                placeholder="Discount (%)" />
+                        </div>
+                        <h4 class="mb-2">Total: {{ total }}</h4>
+                    </div>
                             <a-button type="primary" class="w-full" @click="submitOrder">Generate Order</a-button>
                         </a-col>
                     </a-row>
