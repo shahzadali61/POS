@@ -26,4 +26,18 @@
     z-index: 99999;
 }
 
+.dashboard-card  .badge-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+@media only screen and (max-width: 576px) {
+    .dashboard-card .ant-card-body {
+        padding: 10px !important;
+      }
+
+}

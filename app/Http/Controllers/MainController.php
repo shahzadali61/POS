@@ -30,11 +30,20 @@ class MainController extends Controller
     public function dashboard()
     {
         $brands = Brand::where('user_id', Auth::id())->count();
-        $product = Product::where('user_id', Auth::id())->count();
+        $totalProduct = Product::where('user_id', Auth::id())->count();
         $category = Category::where('user_id', Auth::id())->count();
         $totalRevenue = Order::where('user_id', Auth::id())->sum('total_price');
+        $products = Product::where('user_id', Auth::id())
+        ->with(['purchaseProducts' => function ($query) {
+            $query->select('product_id', 'stock'); // Only fetch necessary fields
+        }])
+        ->get()
+        ->map(function ($product) {
+            $product->total_stock = $product->purchaseProducts->sum('stock'); // Calculate total stock
+            return $product;
+        });
 
-        return Inertia::render('admin/Dashboard', compact('brands', 'product', 'category', 'totalRevenue'));
+        return Inertia::render('admin/Dashboard', compact('brands', 'totalProduct', 'category', 'totalRevenue','products'));
     }
 
 }
