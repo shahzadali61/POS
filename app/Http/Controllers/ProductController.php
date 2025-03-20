@@ -21,8 +21,9 @@ class ProductController extends Controller
         ->with( 'brand')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+            $brands = Brand::all();
 
-        return Inertia::render('admin/product/Index', compact('products'));
+        return Inertia::render('admin/product/Index', compact('products', 'brands'));
     }
     public function store(Request $request)
     {

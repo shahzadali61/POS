@@ -160,8 +160,9 @@ public function update(Request $request, $id)
         ->with( 'product')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+            $products = Product::select('id', 'name')->get();
 
-        return Inertia::render('admin/product/PurchaseProductList', compact('purchaseProducts'));
+        return Inertia::render('admin/product/PurchaseProductList', compact('purchaseProducts', 'products'));
     }
 
     public function purchaseProductLog()

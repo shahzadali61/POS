@@ -3,9 +3,8 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Modal } from 'ant-design-vue';
 import dayjs from "dayjs";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 const isLoading = ref(false);
-// Format date function
 const formatDate = (date: string) => {
     return date ? dayjs(date).format("DD-MM-YYYY hh:mm A") : "N/A";
 };
@@ -21,9 +20,20 @@ const columns = [
 ];
 
 // Receive brands as a prop from Inertia
-defineProps({
+const props = defineProps({
     products: Object,
+    brands: Array,
 });
+
+// Convert brands to Ant Design Select options
+const brandOptions = computed(() => {
+    return props.brands?.map((brand: any) => ({ value: brand.id, label: brand.name })) || [];
+});
+
+// Search filter function
+const filterOption = (input: string, option: any) => {
+    return option.label.toLowerCase().includes(input.toLowerCase());
+};
 const form = useForm({});
 const deleteProduct = (id: number) => {
     Modal.confirm({
@@ -44,9 +54,15 @@ const deleteProduct = (id: number) => {
         },
     });
 };
+const isAddProductModalVisible = ref(false);
 const isEditModalVisible = ref(false);
 const isPurchaseModalVisible = ref(false);
 const selectedProductName = ref("");
+const addProductForm = useForm({
+    name: '',
+    description: '',
+    brand_id: null,
+});
 const editForm = useForm({
     id: null,
     name: '',
@@ -60,6 +76,10 @@ const purchaseDetailForm = useForm({
     product_id: null,
     description: '',
 });
+const openAddProductModal = () => {
+
+    isAddProductModalVisible.value = true;
+}
 const openEditModal = (product: any) => {
     editForm.id = product.id;
     editForm.name = product.name;
@@ -72,6 +92,19 @@ const openPurchaseDetailModal = (product: any) => {
     selectedProductName.value = product.name;
     purchaseDetailForm.product_id = product.id;
 }
+// saveProduct
+const saveProduct = () => {
+    isLoading.value = true;
+    addProductForm.post(route('user.product.store'), {
+        onSuccess: () => {
+            addProductForm.reset();
+            isAddProductModalVisible.value = false;
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
+};
 // Update brand
 const updateProduct = () => {
     isLoading.value = true;
@@ -113,6 +146,9 @@ const savePurchaseProductDetail = () => {
                         <h2 class="text-lg font-semibold">Product List </h2>
 
                         <div>
+                            <a-button class="mx-2" type="default" @click="openAddProductModal()">
+                                Add Product
+                            </a-button>
                             <Link :href="route('user.product-log')">
                             <a-button class="mx-2" type="default">Product Logs</a-button>
                             </Link>
@@ -158,7 +194,9 @@ const savePurchaseProductDetail = () => {
                                 </a-tooltip>
                                 <a-tooltip placement="top">
                                     <template #title>Purchase Product List</template>
-                                    <Link :href="route('user.related.purchase.product.list',record.slug)" class="text-blue-500 hover:underline"><i class="fa fa-list text-slate-800" aria-hidden="true"></i></Link>
+                                    <Link :href="route('user.related.purchase.product.list', record.slug)"
+                                        class="text-blue-500 hover:underline"><i class="fa fa-list text-slate-800"
+                                        aria-hidden="true"></i></Link>
                                 </a-tooltip>
                             </template>
 
@@ -167,8 +205,46 @@ const savePurchaseProductDetail = () => {
                 </div>
             </a-col>
         </a-row>
+        <a-modal v-model:open="isAddProductModalVisible" title="Add Product"
+            @cancel="isAddProductModalVisible = false" :footer="null">
+            <form @submit.prevent="saveProduct">
+                <div class="mb-4">
+                    <label class="block">Brand</label>
+                                    <a-select
+                    v-model:value="addProductForm.brand_id"
+                    show-search
+                    placeholder="Select Brand"
+                    style="width: 100%"
+                    :options="brandOptions"
+                    :filter-option="filterOption"
+                >
+                </a-select>
+                    <div v-if="addProductForm.errors.brand_id" class="text-red-500">{{ addProductForm.errors.brand_id }}
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Name</label>
+                    <a-input v-model:value="addProductForm.name" class="mt-2 w-full" placeholder="Enter Name" />
+                    <div v-if="addProductForm.errors.name" class="text-red-500">{{ addProductForm.errors.name }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block">Description</label>
+                    <a-textarea v-model:value="addProductForm.description" class="mt-2 w-full" placeholder="Description"
+                        :auto-size="{ minRows: 2, maxRows: 5 }" />
+                    <div v-if="addProductForm.errors.description" class="text-red-500">{{
+                        addProductForm.errors.description }}
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <a-button type="default" @click="isAddProductModalVisible = false">Cancel</a-button>
+                    <a-button type="primary" html-type="submit" class="ml-2">Save</a-button>
+                </div>
+            </form>
+        </a-modal>
+
         <!-- Edit Product Modal -->
-        <a-modal v-model:visible="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
+        <a-modal v-model:open="isEditModalVisible" title="Edit Product" @cancel="isEditModalVisible = false"
             :footer="null">
             <form @submit.prevent="updateProduct()">
                 <div class="mb-4">
@@ -190,7 +266,7 @@ const savePurchaseProductDetail = () => {
 
         </a-modal>
         <!-- Edit Purchase Product Detail Modal -->
-        <a-modal  v-model:visible="isPurchaseModalVisible" title="Product Purchase Detail"
+        <a-modal v-model:open="isPurchaseModalVisible" title="Product Purchase Detail"
             @cancel="isPurchaseModalVisible = false" :footer="null">
             <h4 class="text-md">Product - ({{ selectedProductName }})</h4>
             <form @submit.prevent="savePurchaseProductDetail()">
@@ -200,7 +276,7 @@ const savePurchaseProductDetail = () => {
                     <a-col :span="24">
                         <div class="mb-1">
                             <label class="block">Purchase Price</label>
-                            <a-input  type="number" v-model:value="purchaseDetailForm.purchase_price" class="mt-2 w-full"
+                            <a-input type="number" v-model:value="purchaseDetailForm.purchase_price" class="mt-2 w-full"
                                 placeholder="Enter Purchase Price" />
                             <div v-if="purchaseDetailForm.errors.purchase_price" class="text-red-500">{{
                                 purchaseDetailForm.errors.purchase_price }}</div>
@@ -210,7 +286,7 @@ const savePurchaseProductDetail = () => {
                     <a-col :span="24">
                         <div class="mb-1">
                             <label class="block">Sale Price</label>
-                            <a-input  type="number" v-model:value="purchaseDetailForm.sale_price" class="mt-2 w-full"
+                            <a-input type="number" v-model:value="purchaseDetailForm.sale_price" class="mt-2 w-full"
                                 placeholder="Enter Purchase Price" />
                             <div v-if="purchaseDetailForm.errors.sale_price" class="text-red-500">{{
                                 purchaseDetailForm.errors.sale_price }}</div>
@@ -219,7 +295,7 @@ const savePurchaseProductDetail = () => {
                     <a-col :span="24">
                         <div class="mb-1">
                             <label class="block">Stock</label>
-                            <a-input  :min="1"  type="number" v-model:value="purchaseDetailForm.stock" class="mt-2 w-full"
+                            <a-input :min="1" type="number" v-model:value="purchaseDetailForm.stock" class="mt-2 w-full"
                                 placeholder="Enter Purchase Price" />
                             <div v-if="purchaseDetailForm.errors.stock" class="text-red-500">{{
                                 purchaseDetailForm.errors.stock }}

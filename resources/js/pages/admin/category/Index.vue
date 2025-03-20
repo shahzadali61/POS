@@ -192,7 +192,7 @@ const updateCategory = () => {
 
         </a-row>
         <!-- Edit Category Modal -->
-        <a-modal v-model:visible="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false"
+        <a-modal v-model:open="isEditModalVisible" title="Edit Category" @cancel="isEditModalVisible = false"
             :footer="null">
             <form @submit.prevent="updateCategory()">
                 <div class="mb-4">
@@ -213,7 +213,7 @@ const updateCategory = () => {
             </form>
         </a-modal>
         <!-- brand Modal  -->
-        <a-modal v-model:visible="isbrandModalVisible" title="Add Brand  "  @cancel="isbrandModalVisible = false"
+        <a-modal v-model:open="isbrandModalVisible" title="Add Brand  "  @cancel="isbrandModalVisible = false"
             :footer="null">
             <h4 class="text-md"> Category ({{ selectedCategoryName }})</h4>
             <form @submit.prevent="saveBrand()">

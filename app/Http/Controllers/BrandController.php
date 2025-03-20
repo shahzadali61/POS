@@ -24,8 +24,9 @@ class BrandController extends Controller
         ->with( 'category')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+            $categories = Category::all();
 
-        return Inertia::render('admin/brand/Index', compact('brands'));
+            return Inertia::render('admin/brand/Index', compact('brands', 'categories'));
     }
     public function related_brand_list($slug)
     {

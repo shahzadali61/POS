@@ -81,7 +81,7 @@ const openOrderView = (order: any) => {
             </a-col>
         </a-row>
         <!-- Edit Product Modal -->
-        <a-modal width="700px" v-model:visible="isOrderViewModalVisible" title="Order Preview"
+        <a-modal width="700px" v-model:open="isOrderViewModalVisible" title="Order Preview"
             @cancel="isOrderViewModalVisible = false" :footer="null">
             <a-row>
                 <a-col :xs="24">

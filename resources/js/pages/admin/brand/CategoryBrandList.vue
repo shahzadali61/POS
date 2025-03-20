@@ -130,7 +130,7 @@ const updateBrand = () => {
             </a-col>
         </a-row>
           <!-- Edit Category Modal -->
-          <a-modal v-model:visible="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
+          <a-modal v-model:open="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
             :footer="null">
             <form @submit.prevent="updateBrand()">
                 <div class="mb-4">

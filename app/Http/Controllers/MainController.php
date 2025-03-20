@@ -35,11 +35,11 @@ class MainController extends Controller
         $totalRevenue = Order::where('user_id', Auth::id())->sum('total_price');
         $products = Product::where('user_id', Auth::id())
         ->with(['purchaseProducts' => function ($query) {
-            $query->select('product_id', 'stock'); // Only fetch necessary fields
+            $query->select('product_id', 'stock');
         }])
         ->get()
         ->map(function ($product) {
-            $product->total_stock = $product->purchaseProducts->sum('stock'); // Calculate total stock
+            $product->total_stock = $product->purchaseProducts->sum('stock');
             return $product;
         });
 

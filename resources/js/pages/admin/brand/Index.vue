@@ -3,8 +3,8 @@ import AdminLayout from "@/layouts/AdminLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { Modal } from "ant-design-vue";
 import dayjs from "dayjs";
-import { ref } from "vue";
 const isLoading = ref(false);
+import { ref, computed } from "vue";
 
 
 
@@ -22,13 +22,28 @@ const formatDate = (date: string) => {
 };
 
 // Define props correctly
-defineProps({
-    brands: Object,
+
+const props = defineProps({
+  categories: Array,
+  brands: Object,
 });
+// Transform categories into Ant Design's options format
+
+const categoryOptions = computed(() => {
+    return props.categories?.map((category: any) => ({
+        value: category.id,
+        label: category.name
+    })) || [];
+});
+
+const filterOption = (input: string, option: any) => {
+  return option.label.toLowerCase().includes(input.toLowerCase());
+};
 
 const form = useForm({
     name: "",
     description: "",
+    category_id: null,
 });
 const editForm = useForm({
     id: null,
@@ -63,13 +78,31 @@ const deleteBrand = (id: number) => {
 };
 const isEditModalVisible = ref(false);
 const isproductModalVisible = ref(false);
+const isAddBrandModalVisible = ref(false);
 const selectedBrandName = ref("");
+const openAddBrandModal = () => {
+    isAddBrandModalVisible.value = true;
+
+};
 
 const openEditModal = (brands: any) => {
     editForm.id = brands.id;
     editForm.name = brands.name;
     editForm.description = brands.description;
     isEditModalVisible.value = true;
+};
+
+const saveBrand = () => {
+    isLoading.value = true;
+    form.post(route("user.brand.store"), {
+        onSuccess: () => {
+            form.reset();
+            isAddBrandModalVisible.value = false;
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        },
+    });
 };
 // Update brand
 const updateBrand = () => {
@@ -102,6 +135,9 @@ const saveProduct = () => {
 };
 </script>
 <template>
+        <div v-if="isLoading" class="loading-overlay">
+        <a-spin size="large" />
+    </div>
     <AdminLayout>
 
         <Head title="Brands" />
@@ -110,9 +146,12 @@ const saveProduct = () => {
                 <div class="bg-white p-4 shadow-md rounded-lg">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">Brand List</h2>
+                        <div>
+                        <a-button @click="openAddBrandModal()" type="default">Add Brand</a-button>
                         <Link :href="route('user.brand-log')">
                         <a-button type="default">Brand Logs</a-button>
                         </Link>
+                        </div>
                     </div>
                     <a-table :columns="columns" :data-source="brands.data" rowKey="id">
                         <template #bodyCell="{ column, record, index }">
@@ -160,8 +199,49 @@ const saveProduct = () => {
                 </div>
             </a-col>
         </a-row>
+        <!-- add brand -->
+       <!-- Add Brand Modal -->
+<a-modal v-model:open="isAddBrandModalVisible" title="Add Brand" @cancel="isAddBrandModalVisible = false" :footer="null">
+    <form @submit.prevent="saveBrand()">
+    <div class="mb-4">
+        <label class="block">Category</label>
+        <a-select
+    v-model:value="form.category_id"
+    show-search
+    placeholder="Select a Category"
+    class="mt-2 w-full"
+    :options="categoryOptions"
+    :filter-option="filterOption"
+  ></a-select>
+        <div v-if="form.errors.category_id" class="text-red-500">
+            {{ form.errors.category_id }}
+        </div>
+    </div>
+    <div class="mb-4">
+        <label class="block">Name</label>
+        <a-input v-model:value="form.name" class="mt-2 w-full" placeholder="Enter Name" />
+        <div v-if="form.errors.name" class="text-red-500">
+            {{ form.errors.name }}
+        </div>
+    </div>
+    <div class="mb-4">
+        <label class="block">Description</label>
+        <a-textarea v-model:value="form.description" class="mt-2 w-full" placeholder="Description"
+            :auto-size="{ minRows: 2, maxRows: 5 }" />
+        <div v-if="form.errors.description" class="text-red-500">
+            {{ form.errors.description }}
+        </div>
+    </div>
+    <div class="text-right">
+        <a-button type="default" @click="isAddBrandModalVisible = false">Cancel</a-button>
+        <a-button type="primary" html-type="submit" class="ml-2">Add</a-button>
+    </div>
+</form>
+
+</a-modal>
+
         <!-- Edit Category Modal -->
-        <a-modal v-model:visible="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
+        <a-modal v-model:open="isEditModalVisible" title="Edit Brand" @cancel="isEditModalVisible = false"
             :footer="null">
             <form @submit.prevent="updateBrand()">
                 <div class="mb-4">
@@ -186,7 +266,7 @@ const saveProduct = () => {
             </form>
         </a-modal>
         <!-- Product Modal  -->
-        <a-modal v-model:visible="isproductModalVisible" title="Add Product Name  " @cancel="isproductModalVisible = false"
+        <a-modal v-model:open="isproductModalVisible" title="Add Product Name  " @cancel="isproductModalVisible = false"
             :footer="null">
             <h4 class="text-md">Brand ({{ selectedBrandName }})</h4>
             <form @submit.prevent="saveProduct()">
