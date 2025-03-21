@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { FileProtectOutlined } from '@ant-design/icons-vue';
+import { FilterOutlined,DollarCircleOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -79,23 +79,26 @@ const filteredRevenue = computed(() => {
                 <h2 class="text-2xl">Sales</h2>
             </a-col>
             <a-col :lg="6" :sm="12" :xs="24">
-                <DashboardCard title="Today's Sale" :value="todaySales" :icon="FileProtectOutlined" bgColor="bg-red-800" />
+                <DashboardCard title="Today's Sale" :value="todaySales" :icon="DollarCircleOutlined" bgColor="bg-cyan-600" />
             </a-col>
             <a-col :lg="6" :sm="12" :xs="24">
-                <DashboardCard title="Weekly Sale" :value="weeklySales" :icon="FileProtectOutlined" bgColor="bg-orange-800" />
+                <DashboardCard title="Weekly Sale" :value="weeklySales" :icon="DollarCircleOutlined" bgColor="bg-cyan-600" />
             </a-col>
             <a-col :lg="6" :sm="12" :xs="24">
-                <DashboardCard title="Monthly Sale" :value="monthlySales" :icon="FileProtectOutlined" bgColor="bg-blue-800" />
+                <DashboardCard title="Monthly Sale" :value="monthlySales" :icon="DollarCircleOutlined" bgColor="bg-cyan-600" />
             </a-col>
 
 
             <a-col :xs="24">
                 <h5>Sale Filter By Date</h5>
+                <div class="flex">
                 <a-date-picker class="mx-1" v-model:value="filters.start_date" placeholder="Start Date" />
                 <a-date-picker class="mx-1" v-model:value="filters.end_date" placeholder="End Date" />
+                </div>
             </a-col>
             <a-col :lg="6" :xs="24">
-                <DashboardCard title="Filtered Revenue" :value="filteredRevenue" :icon="FileProtectOutlined" bgColor="bg-purple-800" />
+                <DashboardCard title="Filtered Revenue" :value="filteredRevenue" :icon="FilterOutlined "
+                bgColor="bg-slate-600" />
             </a-col>
         </a-row>
     </div>
