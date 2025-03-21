@@ -1,0 +1,108 @@
+<script setup lang="ts">
+import { ref, computed, watchEffect } from 'vue';
+import { FileProtectOutlined } from '@ant-design/icons-vue';
+import DashboardCard from '@/components/admin/DashboardCard.vue';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween);
+
+const props = defineProps({
+    orders: Array
+});
+
+const filters = ref({
+    start_date: null,
+    end_date: null,
+});
+
+// **Total Sales**
+const totalSales = computed(() =>
+    props.orders.reduce((sum, order) => sum + Number(order.total_price), 0)
+);
+
+// **Monthly Sales**
+const monthlySales = computed(() => {
+    const thisMonth = dayjs().month();
+    return props.orders.reduce((sum, order) => {
+        const orderDate = dayjs(order.created_at);
+        return orderDate.isValid() && orderDate.month() === thisMonth
+            ? sum + Number(order.total_price)
+            : sum;
+    }, 0);
+});
+
+// **Weekly Sales**
+const weeklySales = computed(() => {
+    const startOfWeek = dayjs().startOf('week');
+    return props.orders.reduce((sum, order) => {
+        const orderDate = dayjs(order.created_at);
+        return orderDate.isValid() && orderDate.isAfter(startOfWeek)
+            ? sum + Number(order.total_price)
+            : sum;
+    }, 0);
+});
+
+// **Today's Sales**
+const todaySales = computed(() => {
+    const today = dayjs().format('YYYY-MM-DD');
+    return props.orders.reduce((sum, order) => {
+        return dayjs(order.created_at).format('YYYY-MM-DD') === today
+            ? sum + Number(order.total_price)
+            : sum;
+    }, 0);
+});
+
+// **Filtered Revenue (Custom Date Range)**
+const filteredRevenue = computed(() => {
+    if (!filters.value.start_date || !filters.value.end_date) {
+        return totalSales.value;
+    }
+
+    const start = dayjs(filters.value.start_date).startOf('day');
+    const end = dayjs(filters.value.end_date).endOf('day');
+
+    return props.orders.reduce((sum, order) => {
+        const orderDate = dayjs(order.created_at);
+        return orderDate.isValid() && orderDate.isBetween(start, end, null, '[]')
+            ? sum + Number(order.total_price)
+            : sum;
+    }, 0);
+});
+
+// **Ensure date picker updates are reactive**
+watchEffect(() => {
+    filters.value.start_date;
+    filters.value.end_date;
+});
+</script>
+
+<template>
+    <div style="background-color: #ececec; padding: 20px">
+        <a-row :gutter="[16, 16]" justify="start">
+            <a-col :lg="6" :sm="12" :xs="24">
+                <a-date-picker v-model:value="filters.start_date" placeholder="Start Date" />
+            </a-col>
+            <a-col :lg="6" :md="8" :sm="12" :xs="24">
+                <a-date-picker v-model:value="filters.end_date" placeholder="End Date" />
+            </a-col>
+        </a-row>
+        <a-row :gutter="[16, 16]">
+            <a-col :lg="6"  :sm="12" :xs="24">
+                <DashboardCard title="Total Sale" :value="totalSales" :icon="FileProtectOutlined" bgColor="bg-green-800" />
+            </a-col>
+            <a-col :lg="6" :sm="12" :xs="24">
+                <DashboardCard title="Monthly Sale" :value="monthlySales" :icon="FileProtectOutlined" bgColor="bg-blue-800" />
+            </a-col>
+            <a-col :lg="6"  :sm="12" :xs="24">
+                <DashboardCard title="Weekly Sale" :value="weeklySales" :icon="FileProtectOutlined" bgColor="bg-orange-800" />
+            </a-col>
+            <a-col :lg="6"  :sm="12" :xs="24">
+                <DashboardCard title="Today's Sale" :value="todaySales" :icon="FileProtectOutlined" bgColor="bg-red-800" />
+            </a-col>
+            <a-col :lg="6" :sm="12" :xs="24">
+                <DashboardCard title="Filtered Revenue" :value="filteredRevenue" :icon="FileProtectOutlined" bgColor="bg-purple-800" />
+            </a-col>
+        </a-row>
+    </div>
+</template>
