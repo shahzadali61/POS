@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
     <a-card class="dashboard-card">
-        <div class="grid grid-cols-2">
+        <div class="flex justify-between">
             <div>
                 <h3 class="text-sm text-gray-400">{{ title }}</h3>
                 <h4 class="text-xl font-bold mb-0">{{ value }}</h4>

@@ -17,6 +17,46 @@ const props = defineProps({
 <template>
     <AdminLayout>
         <Head title="Dashboard" />
+        <div class="mb-5"  style="background-color: #ececec; padding: 20px">
+            <a-row :gutter="[16, 16]">
+                <a-col :lg="24" :md="24" :sm="24" :xs="24">
+                    <h2 class="text-2xl">Welcome to Dashboard</h2>
+                </a-col>
+                <a-col :lg="6" :sm="12" :xs="24">
+                    <DashboardCard
+                    title="Total Sale"
+                        :value=" orders.reduce((sum, order) => sum + Number(order.total_price), 0)"
+                        :icon="TaobaoCircleOutlined"
+                        bgColor="bg-sky-900"
+                    />
+                </a-col>
+                <a-col :lg="6" :sm="12" :xs="24">
+                    <DashboardCard
+                    title="Total Orders"
+                        :value="orders.length"
+                        :icon="TaobaoCircleOutlined"
+                        bgColor="bg-sky-900"
+                    />
+                </a-col>
+                <a-col :lg="6" :sm="12" :xs="24">
+                    <DashboardCard
+                    title="Brands"
+                        :value="brands"
+                        :icon="TaobaoCircleOutlined"
+                        bgColor="bg-sky-900"
+                    />
+                </a-col>
+                <a-col :lg="6" :sm="12" :xs="24">
+                    <DashboardCard
+                    title="Products"
+                        :value="totalProduct"
+                        :icon="TaobaoCircleOutlined"
+                        bgColor="bg-sky-900"
+                    />
+                </a-col>
+
+            </a-row>
+        </div>
         <SaleManagement :orders="props.orders" />
         <!-- Latest Products -->
         <div class="mt-5"  style="background-color: #ececec; padding: 20px">
@@ -24,7 +64,7 @@ const props = defineProps({
                 <a-col :lg="24" :md="24" :sm="24" :xs="24">
                     <h2 class="text-2xl">Latest Products</h2>
                 </a-col>
-                <a-col :lg="6" :md="8" :sm="12" :xs="24" v-for="product in props.products" :key="product.id">
+                <a-col :lg="6" :sm="12" :xs="24" v-for="product in props.products" :key="product.id">
                     <DashboardCard
                         :title="'Stock (' + product.total_stock + ')' "
                         :value="product.name"

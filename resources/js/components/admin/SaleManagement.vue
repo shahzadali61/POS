@@ -4,7 +4,6 @@ import { FileProtectOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { watch } from 'vue';
 
 dayjs.extend(isBetween);
 
@@ -70,37 +69,32 @@ const filteredRevenue = computed(() => {
             : sum;
     }, 0);
 });
-
-// **Ensure date picker updates are reactive**
-watch(() => [filters.value.start_date, filters.value.end_date], ([start, end]) => {
-    console.log("Date range updated:", start, end);
-});
 </script>
 
 <template>
     <div style="background-color: #ececec; padding: 20px">
-        <a-row :gutter="[16, 16]" justify="start">
-            <a-col :lg="6" :sm="12" :xs="24">
-                <a-date-picker v-model:value="filters.start_date" placeholder="Start Date" />
-            </a-col>
-            <a-col :lg="6" :md="8" :sm="12" :xs="24">
-                <a-date-picker v-model:value="filters.end_date" placeholder="End Date" />
-            </a-col>
-        </a-row>
+
         <a-row :gutter="[16, 16]">
-            <a-col :lg="6"  :sm="12" :xs="24">
-                <DashboardCard title="Total Sale" :value="totalSales" :icon="FileProtectOutlined" bgColor="bg-green-800" />
+            <a-col :xs="24">
+                <h2 class="text-2xl">Sales</h2>
+            </a-col>
+            <a-col :lg="6" :sm="12" :xs="24">
+                <DashboardCard title="Today's Sale" :value="todaySales" :icon="FileProtectOutlined" bgColor="bg-red-800" />
+            </a-col>
+            <a-col :lg="6" :sm="12" :xs="24">
+                <DashboardCard title="Weekly Sale" :value="weeklySales" :icon="FileProtectOutlined" bgColor="bg-orange-800" />
             </a-col>
             <a-col :lg="6" :sm="12" :xs="24">
                 <DashboardCard title="Monthly Sale" :value="monthlySales" :icon="FileProtectOutlined" bgColor="bg-blue-800" />
             </a-col>
-            <a-col :lg="6"  :sm="12" :xs="24">
-                <DashboardCard title="Weekly Sale" :value="weeklySales" :icon="FileProtectOutlined" bgColor="bg-orange-800" />
+
+
+            <a-col :xs="24">
+                <h5>Sale Filter By Date</h5>
+                <a-date-picker class="mx-1" v-model:value="filters.start_date" placeholder="Start Date" />
+                <a-date-picker class="mx-1" v-model:value="filters.end_date" placeholder="End Date" />
             </a-col>
-            <a-col :lg="6"  :sm="12" :xs="24">
-                <DashboardCard title="Today's Sale" :value="todaySales" :icon="FileProtectOutlined" bgColor="bg-red-800" />
-            </a-col>
-            <a-col :lg="6" :sm="12" :xs="24">
+            <a-col :lg="6" :xs="24">
                 <DashboardCard title="Filtered Revenue" :value="filteredRevenue" :icon="FileProtectOutlined" bgColor="bg-purple-800" />
             </a-col>
         </a-row>
