@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed } from 'vue';
 import { FileProtectOutlined } from '@ant-design/icons-vue';
 import DashboardCard from '@/components/admin/DashboardCard.vue';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import { watch } from 'vue';
 
 dayjs.extend(isBetween);
 
@@ -71,9 +72,8 @@ const filteredRevenue = computed(() => {
 });
 
 // **Ensure date picker updates are reactive**
-watchEffect(() => {
-    filters.value.start_date;
-    filters.value.end_date;
+watch(() => [filters.value.start_date, filters.value.end_date], ([start, end]) => {
+    console.log("Date range updated:", start, end);
 });
 </script>
 
