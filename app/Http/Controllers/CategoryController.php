@@ -21,7 +21,6 @@ class CategoryController extends Controller
         $categories= Category::where('user_id', Auth::id())
         ->orderBy('created_at', 'desc')
         ->paginate(10);
-
         return Inertia::render('admin/category/Index', compact('categories'));
     }
     public function store(Request $request)

@@ -56,9 +56,9 @@ onBeforeUnmount(() => {
                 </div>
                 <Link :href="route('user.cache.clear')"
                   >
-                <OrderedListOutlined  />
                 <span>optmize</span>
                 </Link>
+               
             </a-layout-header>
 
             <!-- Content -->

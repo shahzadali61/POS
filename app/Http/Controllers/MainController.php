@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class MainController extends Controller
 {
+
     public function cacheClear(){
         try {
             // Run the Artisan command to clear caches
