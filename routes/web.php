@@ -14,7 +14,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'user', 'verified'])->name('user.')->group(function () {
-
+    Route::get('cache-clear', [MainController::class, 'cacheClear'])->name('cache.clear');
     Route::get('user/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::get('categories', [CategoryController::class, 'index'])->name('categories');
     Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');

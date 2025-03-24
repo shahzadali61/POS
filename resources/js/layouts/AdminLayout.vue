@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Sidebar from "@/components/admin/Sidebar.vue";
-import { Head } from '@inertiajs/vue3';
+import { Head,Link } from '@inertiajs/vue3';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useFlashMessages } from '@/composables/useFlashMessages';
 useFlashMessages();
@@ -54,6 +54,11 @@ onBeforeUnmount(() => {
                     <i class="fa trigger" :class="collapsed ? 'fa-arrow-right' : 'fa-arrow-left'"
                         @click.stop="collapsed = !collapsed"></i>
                 </div>
+                <Link :href="route('user.cache.clear')"
+                  >
+                <OrderedListOutlined  />
+                <span>optmize</span>
+                </Link>
             </a-layout-header>
 
             <!-- Content -->

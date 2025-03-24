@@ -290,8 +290,6 @@ const submitOrder = () => {
                             <a-button type="primary" class="w-full" @click="submitOrder">Generate Order</a-button>
                         </a-col>
                     </a-row>
-
-
                 </div>
 
             </a-col>
