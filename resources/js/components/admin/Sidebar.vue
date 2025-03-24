@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { ref, watch, computed, defineProps } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { UserOutlined, DatabaseOutlined } from '@ant-design/icons-vue';
+import {
+    UserOutlined,
+    DatabaseOutlined,
+    AppstoreOutlined,
+    TrademarkCircleOutlined,
+    ShoppingOutlined,
+    ShoppingCartOutlined,
+    FileTextOutlined,
+    OrderedListOutlined
+} from '@ant-design/icons-vue';
 
 defineProps<{ collapsed: boolean }>();
 
@@ -30,11 +39,10 @@ watch(currentPath, (newUrl) => {
                 </Link>
             </a-menu-item>
 
-
             <!-- Categories -->
             <a-menu-item key="2"  :class="{ 'active': currentPath.startsWith(route('user.categories', {}, false)) }">
                 <Link :href="route('user.categories')">
-                <UserOutlined />
+                <AppstoreOutlined  />
                 <span>Categories</span>
                 </Link>
             </a-menu-item>
@@ -43,7 +51,7 @@ watch(currentPath, (newUrl) => {
             <a-menu-item key="3" :class="{ 'active': currentPath.startsWith(route('user.brands', {}, false)) }">
                 <Link :href="route('user.brands')"
                     >
-                <UserOutlined />
+                <TrademarkCircleOutlined  />
                 <span>Brands</span>
                 </Link>
             </a-menu-item>
@@ -52,7 +60,7 @@ watch(currentPath, (newUrl) => {
             <a-menu-item key="4" :class="{ 'active': currentPath.startsWith(route('user.products', {}, false)) }">
                 <Link :href="route('user.products')"
                     >
-                <UserOutlined />
+                <ShoppingOutlined />
                 <span>Products</span>
                 </Link>
             </a-menu-item>
@@ -61,7 +69,7 @@ watch(currentPath, (newUrl) => {
             <a-menu-item key="5" :class="{ 'active': currentPath.startsWith(route('user.purchase.product.list', {}, false)) }">
                 <Link :href="route('user.purchase.product.list')"
                     >
-                <UserOutlined />
+                <ShoppingCartOutlined  />
                 <span>Purchase Products</span>
                 </Link>
             </a-menu-item>
@@ -70,7 +78,7 @@ watch(currentPath, (newUrl) => {
             <a-menu-item key="6" :class="{ 'active': currentPath.startsWith(route('user.order.create', {}, false)) }">
                 <Link :href="route('user.order.create')"
                     >
-                <UserOutlined />
+                <FileTextOutlined  />
                 <span>Get Orders</span>
                 </Link>
             </a-menu-item>
@@ -79,12 +87,12 @@ watch(currentPath, (newUrl) => {
             <a-menu-item key="7"   :class="{ 'active': currentPath.startsWith(route('user.order.list', {}, false)) }">
                 <Link :href="route('user.order.list')"
                   >
-                <UserOutlined />
+                <OrderedListOutlined  />
                 <span>Order List</span>
                 </Link>
             </a-menu-item>
             <!-- Order List -->
-       
+
 
 
             <!-- Profile -->

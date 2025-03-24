@@ -50,7 +50,7 @@
 .scrollbar
 {
     margin-top: 10px;
-	float: left;
+	/* float: left; */
 	height: 80%;
 	overflow-y: scroll;
 	margin-bottom: 25px;
