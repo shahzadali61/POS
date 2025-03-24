@@ -116,7 +116,7 @@ const updateCategory = () => {
     <Head title="Category" />
 
         <a-row class="justify-between">
-            <a-col :lg="8" :md="24">
+            <a-col :lg="8" :xs="24">
                 <div class="bg-white rounded-lg p-4 shadow-md ">
 
                     <h2 class="text-lg font-semibold mb-4">Create Category</h2>
@@ -140,9 +140,9 @@ const updateCategory = () => {
                     </form>
                 </div>
             </a-col>
-            <a-col :lg="15" :md="24">
+            <a-col :lg="15" :xs="24">
 
-                <div class="bg-white rounded-lg p-4 shadow-md  lg:mt-0 sm:mt-4">
+                <div class="bg-white rounded-lg responsive-table p-4 shadow-md  mt-4 lg:mt-0 w-full">
 
                     <div  class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">Category List</h2>

@@ -143,7 +143,7 @@ const saveProduct = () => {
         <Head title="Brands" />
         <a-row>
             <a-col :xs="24">
-                <div class="bg-white p-4  rounded-lg">
+                <div class="bg-white p-4  rounded-lg responsive-table">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold mb-4">Brand List</h2>
                         <div>

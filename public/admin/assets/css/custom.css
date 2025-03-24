@@ -35,6 +35,13 @@
     align-items: center;
 }
 
+@media only screen and (max-width: 768px) {
+
+    .responsive-table{
+       width: max-content;
+    }
+
+}
 @media only screen and (max-width: 576px) {
     .dashboard-card .ant-card-body {
         padding: 10px !important;

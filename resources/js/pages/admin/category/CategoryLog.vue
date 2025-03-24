@@ -26,7 +26,7 @@ defineProps({
     <Head title="Category Logs" />
         <a-row>
             <a-col :span="24">
-                <div class="bg-white rounded-lg p-4 shadow-md">
+                <div class="bg-white rounded-lg responsive-table p-4 shadow-md">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Category Logs</h2>
                         <Link :href="route('user.categories')" >

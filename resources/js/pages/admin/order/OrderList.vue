@@ -10,7 +10,7 @@ const formatDate = (date: string) => {
 
 const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Customer Name', dataIndex: 'name', key: 'name' },
     { title: 'Phone No', dataIndex: 'phone_no', key: 'phone_no' },
     { title: 'SubTotal', dataIndex: 'subtotal', key: 'subtotal' },
     { title: 'Discount (%)', dataIndex: 'discount', key: 'discount' },
@@ -37,7 +37,7 @@ const openOrderView = (order: any) => {
         <Head title="Order List" />
         <a-row>
             <a-col :span="24">
-                <div class="bg-white rounded-lg p-4 shadow-md">
+                <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Order List</h2>
 

@@ -78,7 +78,7 @@ const updateProduct = () => {
         <Head title="Product List" />
         <a-row>
             <a-col :span="24">
-                <div class="bg-white rounded-lg p-4 shadow-md">
+                <div class="bg-white rounded-lg p-4 shadow-md responsive-table">
                     <div class="mb-4 flex items-center justify-between">
                         <h2 class="text-lg font-semibold">Product List - {{ brand.name }}</h2>
 
