@@ -51,9 +51,13 @@
 {
     margin-top: 10px;
 	/* float: left; */
-	height: 80%;
+	height: 80vh;
 	overflow-y: scroll;
 	margin-bottom: 25px;
+}
+.force-overflow
+{
+	min-height: 80vh;
 }
 
 #style-2::-webkit-scrollbar-track

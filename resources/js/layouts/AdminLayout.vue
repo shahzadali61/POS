@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
 .sidebar {
     width: 200px;
     height: 100vh;
-    background: #121220;
+    background: #001529;
     z-index: 1100;
     transform: translateX(0);
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
