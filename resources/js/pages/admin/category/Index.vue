@@ -114,9 +114,6 @@ const updateCategory = () => {
     </div>
     <AdminLayout>
     <Head title="Category" />
-    <Link :href="route('user.categories')" :class="{ 'active': $page.url.startsWith('/categories') }">
-    Category
-   </Link>
 
         <a-row class="justify-between">
             <a-col :lg="8" :xs="24">

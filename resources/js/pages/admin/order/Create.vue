@@ -3,6 +3,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch, computed } from 'vue';
 import { message } from 'ant-design-vue';
+import { DeleteOutlined } from '@ant-design/icons-vue';
 
 // ✅ State Management
 const isLoading = ref(false);
@@ -152,6 +153,10 @@ const submitOrder = () => {
         <Head title="Create Order" />
 
         <a-row class="bg-white rounded-lg p-4 shadow-md gap-2">
+            <a-col :xs="24" :lg="24">
+                <h1 class="text-2xl">Create Order</h1>
+
+            </a-col>
             <a-col :xs="24" :sm="12" :lg="5">
                 <div class="mb-4">
                     <label class="block">Select Product</label>
@@ -227,7 +232,15 @@ const submitOrder = () => {
                                 <td class="py-2">{{ item.quantity }}</td>
                                 <td class="py-2">{{ item.total }}</td>
                                 <td class="py-2">
-                                    <a-button type="primary" danger @click="removeItem(item.id)">Delete</a-button>
+                                    <a-tooltip placement="top">
+                                        <template #title>Delete</template>
+                                        <a-button type="text" class="text-red-700 hover:text-red-800"
+                                            @click="removeItem(item.id)">
+                                            <DeleteOutlined />
+                                        </a-button>
+                                    </a-tooltip>
+
+
                                 </td>
                             </tr>
                         </tbody>
@@ -266,14 +279,14 @@ const submitOrder = () => {
                         </a-col>
                         <a-col :xs="24">
                             <div>
-                        <h4 class="mb-2">Subtotal: {{ subtotal }}</h4>
-                        <div class="flex items-center mb-2">
-                            <h4>Discount ({{ discount }}%):</h4>
-                            <a-input min="0" max="100" type="number" v-model:value="discount" class="w-52 ml-3"
-                                placeholder="Discount (%)" />
-                        </div>
-                        <h4 class="mb-2">Total: {{ total }}</h4>
-                    </div>
+                                <h4 class="mb-2">Subtotal: {{ subtotal }}</h4>
+                                <div class="flex items-center mb-2">
+                                    <h4>Discount ({{ discount }}%):</h4>
+                                    <a-input min="0" max="100" type="number" v-model:value="discount" class="w-52 ml-3"
+                                        placeholder="Discount (%)" />
+                                </div>
+                                <h4 class="mb-2">Total: {{ total }}</h4>
+                            </div>
                             <a-button type="primary" class="w-full" @click="submitOrder">Generate Order</a-button>
                         </a-col>
                     </a-row>

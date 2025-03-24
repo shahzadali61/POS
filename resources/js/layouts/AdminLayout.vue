@@ -36,19 +36,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+
     <Head title="Dashboard" />
     <a-layout>
         <!-- Sidebar -->
-        <div :class="['sidebar-wrapper', { 'overlay': isMobile && !collapsed }]">
-            <Sidebar v-if="!collapsed" :collapsed="collapsed" class="sidebar" />
-
+        <div class="sidebar-wrapper" :class="{ 'overlay': isMobile && !collapsed }">
+            <div class="sidebar" :class="{ collapsed: collapsed }">
+                <Sidebar :collapsed="collapsed" />
+            </div>
         </div>
 
         <!-- Main Layout -->
         <a-layout :style="{ height: '100vh', marginLeft: isMobile ? '0' : collapsed ? '0' : '200px' }">
             <!-- Header -->
             <a-layout-header class="header">
-                <i class="fa" :class="collapsed ? 'fa fa-arrow-right' : ' fa fa-arrow-left'" @click.stop="collapsed = !collapsed"></i>
+                <div class="trigger-button">
+                    <i class="fa trigger" :class="collapsed ? 'fa-arrow-right' : 'fa-arrow-left'"
+                        @click.stop="collapsed = !collapsed"></i>
+                </div>
             </a-layout-header>
 
             <!-- Content -->
@@ -62,18 +67,20 @@ onBeforeUnmount(() => {
 <style scoped>
 /* Header */
 .header {
-    background: #001529;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    color: white;
+    padding: 0 10px;
+}
+
+.trigger-button {
+    z-index: 1200;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
 }
 
 /* Trigger Button */
 .fa {
     font-size: 18px;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: transform 0.3s ease, color 0.3s ease;
     color: rgb(0, 0, 0);
 }
 
@@ -83,7 +90,14 @@ onBeforeUnmount(() => {
     top: 0;
     left: 0;
     height: 100%;
-    transition: all 0.3s ease;
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+    opacity: 0;
 }
 
 /* Overlay Effect */
@@ -91,6 +105,7 @@ onBeforeUnmount(() => {
     width: 100vw;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
 }
 
 /* Sidebar */
@@ -99,5 +114,13 @@ onBeforeUnmount(() => {
     height: 100vh;
     background: #121220;
     z-index: 1100;
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+    opacity: 0;
 }
 </style>
