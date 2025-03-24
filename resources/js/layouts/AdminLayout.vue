@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
 .sidebar {
     width: 200px;
     height: 100vh;
-    background: #001529;
+    background: #121220;
     z-index: 1100;
 }
 </style>

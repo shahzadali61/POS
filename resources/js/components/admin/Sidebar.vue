@@ -3,58 +3,113 @@ import { ref, watch, computed, defineProps } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { UserOutlined, DatabaseOutlined } from '@ant-design/icons-vue';
 
-// Props
 defineProps<{ collapsed: boolean }>();
 
-// Selected menu key
 const selectedKeys = ref<string[]>([]);
-
-// Define menu items for better maintainability
-const menuItems = [
-  { key: '1', label: 'Dashboard', icon: DatabaseOutlined, route: 'user.dashboard' },
-  { key: '2', label: 'Categories', icon: UserOutlined, route: 'user.categories' },
-  { key: '3', label: 'Brands', icon: UserOutlined, route: 'user.brands' },
-  { key: '4', label: 'Products', icon: UserOutlined, route: 'user.products' },
-  { key: '5', label: 'Purchase Products', icon: UserOutlined, route: 'user.purchase.product.list' },
-  { key: '6', label: 'Get Orders', icon: UserOutlined, route: 'user.order.create' },
-  { key: '7', label: 'Order List', icon: UserOutlined, route: 'user.order.list' },
-  { key: '8', label: 'Profile', icon: UserOutlined, route: 'profile.edit' },
-];
-
-// Compute selected key based on URL
 const page = usePage();
 const currentPath = computed(() => page.url);
+
+// Watch URL changes to update active keys
 watch(currentPath, (newUrl) => {
-  const matchedItem = menuItems.find(item => newUrl.includes(item.route.split('.').pop() || ''));
-  selectedKeys.value = matchedItem ? [matchedItem.key] : [];
+    selectedKeys.value = [newUrl];
 }, { immediate: true });
 </script>
 
 <template>
-  <a-layout-sider :collapsed="collapsed" :trigger="null" collapsible>
-    <div class="logo">
-      <h3 v-if="!collapsed">MyApp</h3>
-    </div>
-    <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-      <a-menu-item v-for="item in menuItems" :key="item.key">
-        <Link :href="route(item.route)">
-          <component :is="item.icon" />
-          <span>{{ item.label }}</span>
-        </Link>
-      </a-menu-item>
-    </a-menu>
-  </a-layout-sider>
+    <a-layout-sider :collapsed="collapsed" :trigger="null" collapsible>
+        <div class="logo">
+            <h3 class="mb-0" v-if="!collapsed">POS Application</h3>
+        </div>
+        <div class="scrollbar" id="style-2">
+        <a-menu v-model:selectedKeys="selectedKeys" class="force-overflow">
+            <!-- Dashboard -->
+            <a-menu-item key="1" :class="{ 'active': currentPath.startsWith(route('user.dashboard', {}, false)) }">
+                <Link :href="route('user.dashboard')">
+                <DatabaseOutlined />
+                <span>Dashboard</span>
+                </Link>
+            </a-menu-item>
+
+
+            <!-- Categories -->
+            <a-menu-item key="2"  :class="{ 'active': currentPath.startsWith(route('user.categories', {}, false)) }">
+                <Link :href="route('user.categories')">
+                <UserOutlined />
+                <span>Categories</span>
+                </Link>
+            </a-menu-item>
+
+            <!-- Brands -->
+            <a-menu-item key="3" :class="{ 'active': currentPath.startsWith(route('user.brands', {}, false)) }">
+                <Link :href="route('user.brands')"
+                    >
+                <UserOutlined />
+                <span>Brands</span>
+                </Link>
+            </a-menu-item>
+
+            <!-- Products -->
+            <a-menu-item key="4" :class="{ 'active': currentPath.startsWith(route('user.products', {}, false)) }">
+                <Link :href="route('user.products')"
+                    >
+                <UserOutlined />
+                <span>Products</span>
+                </Link>
+            </a-menu-item>
+
+            <!-- Purchase Products -->
+            <a-menu-item key="5" :class="{ 'active': currentPath.startsWith(route('user.purchase.product.list', {}, false)) }">
+                <Link :href="route('user.purchase.product.list')"
+                    >
+                <UserOutlined />
+                <span>Purchase Products</span>
+                </Link>
+            </a-menu-item>
+
+            <!-- Get Orders -->
+            <a-menu-item key="6" :class="{ 'active': currentPath.startsWith(route('user.order.create', {}, false)) }">
+                <Link :href="route('user.order.create')"
+                    >
+                <UserOutlined />
+                <span>Get Orders</span>
+                </Link>
+            </a-menu-item>
+
+            <!-- Order List -->
+            <a-menu-item key="7"   :class="{ 'active': currentPath.startsWith(route('user.order.list', {}, false)) }">
+                <Link :href="route('user.order.list')"
+                  >
+                <UserOutlined />
+                <span>Order List</span>
+                </Link>
+            </a-menu-item>
+            <!-- Order List -->
+       
+
+
+            <!-- Profile -->
+            <a-menu-item key="8"  :class="{ 'active': currentPath.startsWith(route('profile.edit', {}, false)) }">
+                <Link :href="route('profile.edit')"
+                   >
+                <UserOutlined />
+                <span>Profile</span>
+                </Link>
+            </a-menu-item>
+        </a-menu>
+        </div>
+    </a-layout-sider>
 </template>
 
 <style scoped>
 .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
+    margin-top: 10px;
+    height: 42px;
+    color: rgb(255, 255, 255) !important ;
+    background-color: #232330 !important ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+
 }
 </style>
